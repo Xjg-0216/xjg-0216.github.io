@@ -5,16 +5,17 @@ site_description: Xujg Site
 
 # [Navigtion]
 nav:
-  - vscode C/C++:
-    - TOOL/vscode/01-g++.md
-    - TOOL/vscode/02-compile.md
-    - TOOL/vscode/03-dbg.md
-    - TOOL/vscode/04-debug.md
-    - TOOL/vscode/05-cmake.md
-    - TOOL/vscode/06-cmake-compile-step.md
-    - TOOL/vscode/07-cmake-compile.md
-    - TOOL/vscode/08-vscode-debug.md
-    - TOOL/vscode/a1-vscode-compile.md
+  - 工具:
+    - vscode C/C++:
+      - TOOL/vscode/01-g++.md
+      - TOOL/vscode/02-compile.md
+      - TOOL/vscode/03-dbg.md
+      - TOOL/vscode/04-debug.md
+      - TOOL/vscode/05-cmake.md
+      - TOOL/vscode/06-cmake-compile-step.md
+      - TOOL/vscode/07-cmake-compile.md
+      - TOOL/vscode/08-vscode-debug.md
+      - TOOL/vscode/a1-vscode-compile.md
     
 
 # [UI]
