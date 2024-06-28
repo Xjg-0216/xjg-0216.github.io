@@ -16,7 +16,7 @@ nav:
       - TOOL/vscode/07-cmake-compile.md
       - TOOL/vscode/08-vscode-debug.md
       - TOOL/vscode/a1-vscode-compile.md
-    - docker
+    - docker:
       - TOOL/docker/01-docker-install.md
       - TOOL/docker/02-docker-commands.md
     
