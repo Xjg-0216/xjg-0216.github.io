@@ -5,6 +5,8 @@ site_description: Xujg Site
 
 # [Navigtion]
 nav:
+  - README:
+    - index.md
   - 工具:
     - vscode C/C++:
       - TOOL/vscode/01-g++.md
