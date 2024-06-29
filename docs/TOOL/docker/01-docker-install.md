@@ -152,3 +152,27 @@ sudo usermod -aG docker <用户名>
 现在，注销并重新登录以使更改生效。但如果你使用的是虚拟机，那么必须重新启动。
 
 就是这样！从现在开始，你可以使用 `docker` 命令而不需要 sudo
+
+#### 添加镜像源
+
+在`/etc/docker`目录中添加daemon.json文件,加入阿里云镜像
+重启docker服务
+```bash
+sudo service docker restart
+```
+然后通过以下命令确定镜像修改成功, 进行查看
+```bash 
+sudo docker info
+```
+国内常见的镜像加速器
+
+* Docker 中国官方镜像	[https://registry.docker-cn.com](https://registry.docker-cn.com)
+* DaoCloud 镜像站	[http://f1361db2.m.daocloud.io](http://f1361db2.m.daocloud.io)
+* Azure 中国镜像	[https://dockerhub.azk8s.cn](https://dockerhub.azk8s.cn)
+* 科大镜像站	[https://docker.mirrors.ustc.edu.cn](https://docker.mirrors.ustc.edu.cn)
+* 阿里云	[https://ud6340vz.mirror.aliyuncs.com](https://ud6340vz.mirror.aliyuncs.com)
+* 七牛云	[https://reg-mirror.qiniu.com](https://reg-mirror.qiniu.com)
+* 网易云	[https://hub-mirror.c.163.com](https://hub-mirror.c.163.com)
+* 腾讯云	[https://mirror.ccs.tencentyun.com](https://mirror.ccs.tencentyun.com)
+
+
