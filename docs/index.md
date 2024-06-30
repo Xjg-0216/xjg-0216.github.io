@@ -1,7 +1,7 @@
 # README
 ***
-欢迎你来到我的网站， 该网站是静态网站，主要内容是一些技术笔记和博客文章，使用`Markdown`格式编写， 通过`Mkdocs`构建项目文档
-（[mkdocs.org](https://www.mkdocs.org)），最终使用`Github Action`部署在`Github Pages`上
+欢迎你来到我的网站， 该网站是静态网站，主要内容是日常工作学习中的一些技术笔记和博客文章，使用`Markdown`格式编写， 通过`Mkdocs`构建项目文档
+（[mkdocs.org](https://www.mkdocs.org)），最终通过`Github Action`部署在`Github Pages`上
 ***
 下面分别介绍了mkdocs的基本命令， 项目的组织结构以及material主题支持的语法
 
