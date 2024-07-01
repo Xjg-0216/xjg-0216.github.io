@@ -27,18 +27,23 @@ ODM项目文档：[https://docs.opendronemap.org/](https://docs.opendronemap.org
 ### 快速开始
 
 使用docker运行ODM, 首先拉取镜像
+~~`sudo docker pull opendronemap/opendronemap` , 此镜像已弃用~~
+
+拉取镜像
 ```bash
-sudo docker pull opendronemap/opendronemap
+sudo docker pull opendronemap/odm
 ```
-![alt text](./img/4465686517.jpg)
+!!! note 拉取这个镜像需要代理服务器
+
+
 
 ```bash
-(base) xujg@xujg-ASUS:~$ sudo docker images
-REPOSITORY                  TAG         IMAGE ID       CREATED       SIZE
-ubuntu                      latest      ba6acccedd29   2 years ago   72.8MB
-hello-world                 latest      feb5d9fea6a5   2 years ago   13.3kB
-nvidia/cuda                 10.0-base   97cca2bac989   2 years ago   109MB
-opendronemap/opendronemap   latest      8c89143494c7   5 years ago   3.04GB
+xujg@xujg-ps:~$ sudo docker images
+REPOSITORY                  TAG       IMAGE ID       CREATED        SIZE
+opendronemap/odm            latest    e3d462eb2c32   26 hours ago   1.61GB
+hello-world                 latest    feb5d9fea6a5   2 years ago    13.3kB
+opendronemap/opendronemap   latest    8c89143494c7   5 years ago    3.04GB
+
 ```
 示例数据集在： [ https://github.com/OpenDroneMap/odm_data ]( https://github.com/OpenDroneMap/odm_data )
 
@@ -66,12 +71,17 @@ sudo docker run -it --rm \
 
     表示地表和地形的高程数据，通常以 GeoTIFF 格式存储。
 
-需要指出的是，
+!!! danger 需要指出的是，如果输入图像数据没有EXIF信息， 则需要加地理信息， 否则表面纹理映射，数字高程模型，正射图像都没办法得到
 
-生成DSM和DEM
+
+==默认情况下，在项目根目录中加入`geo.txt`， 此时ODM会自动检测到它，如果它有其他名称，则需要指定==
+
+
+命令示例：
 ```bash
-docker run -it --rm \
-    -v $(pwd)/images:/datasets/code/images \
-    -v $(pwd)/odm_output:/datasets/code/odm_output \
-    opendronemap/opendronemap --dsm --dtm --dem-resolution 2.0
+sudo docker run -it --rm     \
+-v "/home/xujg/code/data_odm_50:/datasets"      \
+opendronemap/odm     /datasets
+
 ```
+

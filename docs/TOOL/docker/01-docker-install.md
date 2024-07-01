@@ -176,3 +176,47 @@ sudo docker info
 * 腾讯云	[https://mirror.ccs.tencentyun.com](https://mirror.ccs.tencentyun.com)
 
 
+#### 配置Docker守护进程使用代理
+1.创建或编辑Docker守护进程的代理配置文件：
+
+在 `/etc/systemd/system/docker.service.d` 目录下创建或编辑 `http-proxy.conf` 文件：
+
+```bash
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo nano /etc/systemd/system/docker.service.d/http-proxy.conf
+```
+
+
+2.添加代理配置：
+
+在文件中添加以下内容，使用您的代理地址：
+
+```text
+[Service]
+Environment="HTTP_PROXY=http://127.0.0.1:7897/"
+Environment="HTTPS_PROXY=http://127.0.0.1:7897/"
+```
+3.重新加载守护进程并重启Docker：
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+
+4.验证设置是否生效：
+您可以使用以下命令查看Docker的代理设置：
+
+```bash
+systemctl show --property=Environment docker
+```
+#### 验证Docker代理设置
+```bash
+docker info
+```
+检查输出中的 "HTTP Proxy" 和 "HTTPS Proxy" 设置是否正确。
+
+#### 重新拉取Docker镜像
+```bash
+sudo docker pull opendronemap/odm
+```
