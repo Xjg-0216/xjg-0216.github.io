@@ -27,7 +27,8 @@
     This is a note.
 ```
 举例， 以下命令同理
-!!! note this is a note
+!!! note
+    this is a note
 
 - Tip
 ```markdown
