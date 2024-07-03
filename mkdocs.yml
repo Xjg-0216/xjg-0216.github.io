@@ -146,7 +146,17 @@ markdown_extensions:
   # [Markdown footnote 语法支持]
   # https://squidfunk.github.io/mkdocs-material/reference/footnotes/
   - footnotes
-
+  - pymdownx.tilde  # 支持删除线
+  - pymdownx.mark  # 支持背景高亮
+  - tables  # 改进表格显示
+  - abbr  # 支持扩展引用块
+  - def_list  # 支持定义列表
+  # - smartypants  # 智能引用
+  - pymdownx.emoji  # 支持Emoji
+  # - autolink  # 自动将URL转换为链接
+  # - headerid  # 为标题添加锚点
+  # - pymdownx.charts  # 支持插入图表
+  # - tasklist  # 支持任务列表语法
 extra_javascript:
   # [数学公式支持]
   # https://squidfunk.github.io/mkdocs-material/reference/math/#katex
@@ -159,6 +169,6 @@ extra_css:
   - https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css
   # # [自定义 css]
   # # 不使用底部的翻页
-  # - mkdocs/css/no-footer.css
+  - mkdocs/css/no-footer.css
   # # 无序列表符号自定义
   # - mkdocs/css/unordered-list-symbols.css

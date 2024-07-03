@@ -22,7 +22,7 @@ ODM项目github地址：[https://github.com/OpenDroneMap/ODM](https://github.com
 ODM项目文档：[https://docs.opendronemap.org/](https://docs.opendronemap.org/)
 
 
-#### 快速开始
+#### 1.快速开始
 
 使用docker运行ODM, 首先拉取镜像
 ~~`sudo docker pull opendronemap/opendronemap` , 此镜像已弃用~~
@@ -55,9 +55,9 @@ sudo docker run -it --rm \
     -v "$(pwd)/odm_texturing:/code/odm_texturing" \
     opendronemap/opendronemap
 ```
-#### 输入数据
+#### 2.输入数据
 无人机拍摄的重叠图像。这些图像可以是普通的**可见光图像**、**多光谱图像**或**热成像图像**。图像应具有足够的重叠度，通常建议 60-80% 的前向重叠（沿飞行方向）和侧向重叠（垂直于飞行方向）。
-#### 输出数据
+#### 3.输出数据
 正射影像 (Orthophoto)：
 
     高分辨率、地理校正后的正射影像，通常以 GeoTIFF 格式存储。
@@ -88,7 +88,6 @@ stamp56536.jpg 116.292350769 38.1299972534 114.0
 sudo docker run -it --rm     \
 -v "/home/xujg/code/project:/datasets"      \
 opendronemap/odm     /datasets
-
 ```
 
 输出：
