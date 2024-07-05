@@ -3,14 +3,14 @@
  * @Author: xujg
  * @version: 
  * @Date: 2024-07-05 13:10:43
- * @LastEditTime: 2024-07-05 13:31:29
+ * @LastEditTime: 2024-07-05 13:37:32
 -->
 # byobu
 !!! note
     ssh连接linux服务器中断后，如何让命令继续在服务器运行
 
-使用`byobu`
-
+>使用`byobu`
+`byobu` 是一个增强的终端复用器，它基于 `tmux` 和 `screen`，提供了更友好的界面和更多的功能。使用 `byobu` 可以方便地在关闭 `VSCode` 或终端后保持程序运行。以下是使用 `byobu` 的步骤：
 
 ### 安装byobu
 在远程服务器安装`byobu`
@@ -22,9 +22,9 @@ sudo apt-get install byobu
 ```bash
 byobu
 ```
-这将启动一个新的 byobu 会话。如果是第一次运行，byobu 可能会提示配置键绑定选项。
+这将启动一个新的 `byobu `会话。如果是第一次运行，`byobu` 可能会提示配置键绑定选项。
 
-在 byobu 会话中运行你的程序：
+在 `byobu` 会话中运行程序：
 例如，运行一个 Python 脚本：
 ```bash
 python my_script.py
@@ -46,7 +46,7 @@ exit
 ```bash
 byobu list-sessions
 ```
-使用 byobu attach-session 命令重新连接到指定会话：
+使用 `byobu attach-session` 命令重新连接到指定会话：
 ```bash
 byobu attach-session -t <session-name>
 ```
@@ -105,6 +105,6 @@ byobu attach-session -t <session-name>
 `Ctrl + A`，`P`：切换到前一个窗口。
 `Ctrl + A`，`L`：重新绘制屏幕。
 ### 快捷键参考
-F9 打开配置菜单：
-通过按 `F9` 键，可以访问 byobu 的配置菜单，在这里可以查看和更改所有快捷键的设置。
+`F9` 打开配置菜单：
+通过按 `F9` 键，可以访问 `byobu` 的配置菜单，在这里可以查看和更改所有快捷键的设置。
 在配置菜单中，你还可以配置状态栏、颜色方案、键绑定等选项。
