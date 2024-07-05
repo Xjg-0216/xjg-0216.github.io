@@ -24,10 +24,9 @@ nav:
     - ubuntu:
       - TOOL/ubuntu/01-timeshift.md
       - TOOL/ubuntu/02-apt.md
+      - TOOL/ubuntu/04-byobu.md
     - conda:
       - TOOL/conda.md
-    - byobu:
-      - TOOL/byobu.md
   - 图像处理:
     # - IMAGE_PROCESS/01-ISP.md
     - IMAGE_PROCESS/02-OpenDroneMap.md
