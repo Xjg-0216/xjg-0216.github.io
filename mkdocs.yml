@@ -33,6 +33,7 @@ nav:
     - IMAGE_PROCESS/02-OpenDroneMap.md
   - UAV:
     - UAV/01-elevation.md
+    - UAV/02-Flight_attitude.md
   - 模型部署:
     - deploy/onnx.md
   - 其他:
