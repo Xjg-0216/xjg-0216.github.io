@@ -3,14 +3,14 @@
  * @Author: xujg
  * @version: 
  * @Date: 2024-07-12 10:50:17
- * @LastEditTime: 2024-07-12 11:23:54
+ * @LastEditTime: 2024-07-12 13:46:16
 -->
 # 飞行姿态
 
 !!! note
-    **滚转角 (roll)**：飞行器绕前后轴的旋转角度
-    **俯仰角 (pitch)**：飞行器绕左右轴的旋转角度
-    **偏航角 (yaw)**：飞行器绕垂直轴的旋转角度
+    **滚转角 (roll)**：飞行器绕前后轴（X轴）的旋转角度
+    **俯仰角 (pitch)**：飞行器向上或向下的角度
+    **偏航角 (yaw)**：飞行器向左或向右的角度
 
 
 python可视化演示：
@@ -122,3 +122,91 @@ anim_yaw.save('aircraft_yaw.gif', writer='imagemagick')
 * **范围**：从 `-180°` 到 `180°`。
 * **正方向**：如果机头向右，机尾向左，则为正偏航；反之则为负偏航。
 ![alt text](./img/aircraft_yaw.gif)
+
+
+
+
+### 根据飞行姿态调整至正射图像
+
+根据上述介绍的偏航角，俯仰角，滚转角校正图像
+
+```python
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+def euler_to_rotation_matrix(roll, pitch, yaw):
+    """
+    Convert Euler angles to a rotation matrix.
+    """
+    R_x = np.array([[1, 0, 0],
+                    [0, np.cos(roll), -np.sin(roll)],
+                    [0, np.sin(roll), np.cos(roll)]])
+    
+    R_y = np.array([[np.cos(pitch), 0, np.sin(pitch)],
+                    [0, 1, 0],
+                    [-np.sin(pitch), 0, np.cos(pitch)]])
+    
+    R_z = np.array([[np.cos(yaw), -np.sin(yaw), 0],
+                    [np.sin(yaw), np.cos(yaw), 0],
+                    [0, 0, 1]])
+    
+    R = np.dot(R_z, np.dot(R_y, R_x))
+    return R
+
+def adjust_image(image_path, roll, pitch, yaw):
+    """
+    Adjust the image to orthographic view using the given roll, pitch, and yaw angles.
+    """
+    # Read the image
+    image = cv2.imread(image_path)
+    
+    # Image dimensions
+    height, width = image.shape[:2]
+    
+    # Get the rotation matrix
+    R = euler_to_rotation_matrix(roll, pitch, yaw)
+    
+    # Define the source points (four corners of the image)
+    src_points = np.array([[0, 0],
+                           [width - 1, 0],
+                           [width - 1, height - 1],
+                           [0, height - 1]], dtype='float32')
+    
+    # Apply the rotation to the source points
+    dst_points = np.dot(src_points - np.array([width / 2, height / 2]), R[:2, :2].T) + np.array([width / 2, height / 2])
+    dst_points = dst_points.astype('float32')
+    
+    # Compute the perspective transform matrix
+    matrix = cv2.getPerspectiveTransform(src_points, dst_points)
+    
+    # Apply the perspective transformation
+    adjusted_image = cv2.warpPerspective(image, matrix, (width, height))
+    
+    return adjusted_image
+
+# Example usage
+image_path = 'stamp19291.jpg'
+#这个例子我使用的是弧度，角度的话也可以，需要转换
+yaw, pitch, roll = 1.793676, 0.061006, -0.014411
+
+adjusted_image = adjust_image(image_path, roll, pitch, yaw)
+
+# Read the original image
+original_image = cv2.imread(image_path)
+
+# Concatenate the original and adjusted images horizontally
+concatenated_image = np.concatenate((original_image, adjusted_image), axis=1)
+
+# Convert the image from BGR to RGB for displaying using matplotlib
+concatenated_image_rgb = cv2.cvtColor(concatenated_image, cv2.COLOR_BGR2RGB)
+
+# Display the concatenated image
+plt.figure(figsize=(10, 5))
+plt.imshow(concatenated_image_rgb)
+plt.axis('off')
+plt.title('Original and Adjusted Images')
+plt.show()
+```
+
+![alt text](./img/output.png)
