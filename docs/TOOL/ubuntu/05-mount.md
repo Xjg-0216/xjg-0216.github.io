@@ -1,10 +1,5 @@
-<!--
- * @Descripttion: 
- * @Author: xujg
- * @version: 
- * @Date: 2024-07-11 11:45:57
- * @LastEditTime: 2024-07-11 12:43:03
--->
+
+
 # 挂载硬盘
 
 ### 1. 检查已挂载的文件系统

@@ -1,11 +1,17 @@
 # 无人机定位数据集制作
 
-主要分为以下步骤：
-* **通过ODM将拍摄的图像转换成正射地图**
-* **通过QGIS将正射地图与谷歌地图对齐**
-* **通过python将对齐后的地图进行裁剪**
+主要分为以下步骤： 
+
+* 通过ODM将拍摄的图像转换成正射地图  
+
+* 通过QGIS将正射地图与谷歌地图对齐  
+
+* 通过python将对齐后的地图进行裁剪   
+
 ### ODM
-OpenDroneMap (ODM) 是一个开源的软件项目，用于处理从无人机获取的图像数据，并生成高质量的地理空间信息产品。以下是对 OpenDroneMap 的详细介绍：
+
+
+OpenDroneMap (ODM) 是一个开源的软件项目，用于处理从无人机获取的图像数据，并生成高质量的地理空间信息产品。以下是对 OpenDroneMap 的详细介绍：  
 * 图像拼接（Orthophoto Generation）：
         ODM 能够将无人机拍摄的重叠图像拼接成高分辨率的正射影像（orthophoto）
 
@@ -115,7 +121,8 @@ opendronemap/odm     /datasets
 使用QGIS等GIS软件，将正射影像与谷歌地图对齐。以下是详细步骤：
 
 ##### 1.安装QGIS
-下载链接[https://www.qgis.org/en/site/forusers/alldownloads.html#debian-ubuntu](https://www.qgis.org/en/site/forusers/alldownloads.html#debian-ubuntu)
+下载链接[https://www.qgis.org/en/site/forusers/alldownloads.html#debian-ubuntu](https://www.qgis.org/en/site/forusers/alldownloads.html#debian-ubuntu)  
+
 使用教程: [https://www.osgeo.cn/qgisdoc/docs/user_manual/index.html](https://www.osgeo.cn/qgisdoc/docs/user_manual/index.html)
 ##### 2.导入正射影像
 打开QGIS
@@ -164,8 +171,12 @@ opendronemap/odm     /datasets
 
 在导出的`Geotiff`中，`odm_orthophoto.tif`和`google.tif`设置了相同的空间分辨率(1m/pt)， 尺寸大小也相同
 
-使用python进行以下处理：
-* 1. 沿`odm_orthophoto.tif`文件裁剪， 像素大小为$512\times512$， 步长为32
-* 2. 坐标采用$512\times512$子图中心点的位置坐标，并将`EPSG:3857`转换为`UTM`坐标
-* 3. 采用相同的方法对`google.tif`文件进行裁剪
-* 4. 数据筛选及清洗
+使用python进行以下处理：  
+
+* 1.沿`odm_orthophoto.tif`文件裁剪， 像素大小为$512\times512$， 步长为32  
+
+* 2.坐标采用$512\times512$子图中心点的位置坐标，并将`EPSG:3857`转换为`UTM`坐标  
+
+* 3.采用相同的方法对`google.tif`文件进行裁剪  
+
+* 4.数据筛选及清洗  

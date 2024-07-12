@@ -1,10 +1,4 @@
-<!--
- * @Descripttion: 
- * @Author: xujg
- * @version: 
- * @Date: 2024-07-03 23:44:51
- * @LastEditTime: 2024-07-04 00:29:50
--->
+
 # apt
 
 在 `Linux `中，`apt` 是一个非常常用的命令行工具，用于管理软件包。`apt` 代表 `Advanced Package Tool`，是一个包管理器。以下是 `apt` 命令的一些基本用法和常用选项的详细解释：

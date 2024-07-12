@@ -1,10 +1,5 @@
-<!--
- * @Descripttion: 
- * @Author: xujg
- * @version: 
- * @Date: 2024-07-03 10:13:49
- * @LastEditTime: 2024-07-04 00:32:33
--->
+
+
 # 系统备份
 
 Timeshift 是类似于 macOS「时间机器」的备份工具，它能备份整个系统，并提供文件备份选项和备份计划功能。
