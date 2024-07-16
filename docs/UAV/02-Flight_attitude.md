@@ -3,7 +3,7 @@
  * @Author: xujg
  * @version: 
  * @Date: 2024-07-12 10:50:17
- * @LastEditTime: 2024-07-12 17:47:25
+ * @LastEditTime: 2024-07-16 17:37:37
 -->
 # 飞行姿态
 
@@ -128,7 +128,13 @@ anim_yaw.save('aircraft_yaw.gif', writer='imagemagick')
 
 ### 根据飞行姿态调整至正射图像
 
-根据上述介绍的偏航角，俯仰角，滚转角校正图像
+根据上述介绍的偏航角，俯仰角，滚转角校正图像,主要包含以下步骤：
+
+* 根据俯仰角，偏航角，滚转角得到围绕三个方向的旋转矩阵
+* 定义src_img的四个角点src_points
+* 根据旋转矩阵求解四个角点旋转后的位置dst_points
+* 通过dst_points和src_points计算透视矩阵
+* 将透视矩阵应用到src_img上得到dst_img
 
 ```python
 import cv2
