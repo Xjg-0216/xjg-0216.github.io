@@ -125,34 +125,46 @@ $\text{error} = \sqrt{(u - u')^2 + (v - v')^2}$
 0 & 0 & 1
 \end{pmatrix} \]
 ##### 旋转矩阵 \( R \):
-旋转矩阵 \( R \) 是由三个旋转矩阵（绕 Z 轴的偏航角 \( \theta_z \)，绕 Y 轴的俯仰角 \( \theta_y \)，绕 X 轴的滚转角 \( \theta_x \)）组成的：
-\[ R = R_z(\theta_z) \cdot R_y(\theta_y) \cdot R_x(\theta_x) \]
-其中：
+旋转矩阵 \( R \) 是由三个旋转矩阵（绕 Z 轴的偏航角 \( \theta_z \)，绕 Y 轴的俯仰角 \( \theta_y \)，绕 X 轴的滚转角 \( \theta_x \)）组成的：  
+
+\[ R = R_z(\theta_z) \cdot R_y(\theta_y) \cdot R_x(\theta_x) \]  
+
+其中：  
+
 \[ R_z(\theta_z) = \begin{pmatrix}
 \cos(\theta_z) & -\sin(\theta_z) & 0 \\
 \sin(\theta_z) & \cos(\theta_z) & 0 \\
 0 & 0 & 1
-\end{pmatrix} \]
+\end{pmatrix} \]  
+
 \[ R_y(\theta_y) = \begin{pmatrix}
 \cos(\theta_y) & 0 & \sin(\theta_y) \\
 0 & 1 & 0 \\
 -\sin(\theta_y) & 0 & \cos(\theta_y)
-\end{pmatrix} \]
+\end{pmatrix} \]  
+
 \[ R_x(\theta_x) = \begin{pmatrix}
 1 & 0 & 0 \\
 0 & \cos(\theta_x) & -\sin(\theta_x) \\
 0 & \sin(\theta_x) & \cos(\theta_x)
-\end{pmatrix} \]
-##### 平移向量 \( t \):
+\end{pmatrix} \]  
+
+##### 平移向量 \( t \):  
+
 \[ t = \begin{pmatrix}
 t_x \\
 t_y \\
 t_z
-\end{pmatrix} \]
-##### 投影矩阵 \( P \):
-\[ P = K \cdot [R | t] \]
-#### 2. 图像坐标到地面坐标的转换
-对于每个图像像素坐标 \( (u, v) \)，可以计算其在世界坐标系中的三维点 \( (X, Y, Z) \)：
+\end{pmatrix} \]  
+
+##### 投影矩阵 \( P \):  
+
+\[ P = K \cdot [R | t] \]  
+
+#### 2. 图像坐标到地面坐标的转换  
+
+对于每个图像像素坐标 \( (u, v) \)，可以计算其在世界坐标系中的三维点 \( (X, Y, Z) \)：  
+
 \[ \begin{pmatrix}
 X \\
 Y \\
@@ -162,10 +174,12 @@ Z \\
 u \\
 v \\
 1
-\end{pmatrix} \]
+\end{pmatrix} \]  
+
 其中 \( P_{\text{inv}} \) 是投影矩阵的伪逆矩阵。
 #### 3. 使用地面高程进行归一化
-假设地面高程为 \( Z = H \)，则：
+假设地面高程为 \( Z = H \)，则：  
+
 \[ \begin{pmatrix}
 X' \\
 Y' \\
@@ -178,8 +192,12 @@ Z \\
 1
 \end{pmatrix} \]
 
-#### 4. 地面坐标映射到正射图像
-将地面坐标 \( (X', Y') \) 映射到正射图像坐标 \( (u', v') \)：
-\[ u' = \frac{X'}{\Delta X} + u_0 \]
-\[ v' = \frac{Y'}{\Delta Y} + v_0 \]
+#### 4. 地面坐标映射到正射图像  
+
+将地面坐标 \( (X', Y') \) 映射到正射图像坐标 \( (u', v') \)：  
+
+\[ u' = \frac{X'}{\Delta X} + u_0 \]  
+
+\[ v' = \frac{Y'}{\Delta Y} + v_0 \]  
+
 其中 \( \Delta X \) 和 \( \Delta Y \) 是地面坐标到像素坐标的比例因子，\( (u_0, v_0) \) 是正射图像的中心坐标。
