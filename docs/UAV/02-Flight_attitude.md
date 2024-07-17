@@ -1,10 +1,4 @@
-<!--
- * @Descripttion: 
- * @Author: xujg
- * @version: 
- * @Date: 2024-07-12 10:50:17
- * @LastEditTime: 2024-07-16 17:37:37
--->
+
 # 飞行姿态
 
 !!! note
