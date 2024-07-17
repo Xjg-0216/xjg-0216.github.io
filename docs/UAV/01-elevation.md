@@ -1,32 +1,36 @@
-# 坐标与海拔信息
 
-### 海拔信息
->海拔信息（Elevation）指的是某个点相对于海平面的高度。在地理和导航应用中，了解某个地点的海拔高度可以提供关于该地点在垂直方向上的位置的信息，这对很多应用场景都非常重要，地形分析：了解地形的起伏变化，比如山脉、山谷、平原等。
+# 数字高程模型(DEM)
 
-已知经纬度信息情况下， 得到海拔信息
-!!! tip
-    通过Open Elevation API获取到的海拔高度表示的是地面相对于海平面的高度
+### 定义
+==数字高程模型（Digital Elevation Model, DEM）== 是一种数字表示地形高程的数据模型，通常以栅格或网格形式存储。DEM 是地理信息系统（GIS）和遥感中的一种基本数据类型，广泛应用于地形分析、流域划分、地形阴影绘制、视域分析等领域。
 
-
-```python
-# 获取海拔数据
-def get_elevation(lat, lon):
-    url = f'https://api.open-elevation.com/api/v1/lookup?locations={lat},{lon}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        results = response.json()['results']
-        if results:
-            print(results[0]['elevation'])
-            return results[0]['elevation']
-    return None
-
-df_selected['Elevation'] = df_selected.apply(lambda row: get_elevation(row['Latitude'], row['Longitude']), axis=1)
-
-# 保存提取的数据到新文件
-output_file_path = './selected_recid_coordinates.csv'
-df_selected.to_csv(output_file_path, index=False)
+### DEM 的主要特征
+栅格格式：DEM 通常以栅格格式存储，每个栅格单元（像素）代表地面上的一个区域，单元值表示该区域的高程。
+分辨率：DEM 的分辨率是指每个栅格单元的大小。分辨率越高，模型的精度越高。
+单位：高程值通常以米或英尺为单位。
+数据源：DEM 数据可以通过遥感技术、激光雷达（LiDAR）、地形测量等方式获得。
+### DEM 的应用
+地形分析：分析地形的坡度、坡向、曲率等。
+流域划分：根据高程信息进行流域边界的划分。
+水文模型：模拟水流的路径、流速等。
+地理可视化：生成三维地形图、地形阴影图等。
+视域分析：分析地形对视线的阻挡情况。
+DEM 示例
+以下是一个简单的 DEM 示例，展示了一小部分区域的高程数据：
+```text
+10  12  13  15
+11  14  15  17
+12  15  18  20
+14  16  19  21
 ```
+这个示例表示一个 4x4 的栅格，每个单元的值表示该位置的高程。
 
-### UTM
+DEM 在图像重投影中的作用
+在将无人机拍摄的图像重投影到正射图像的过程中，DEM 用于提供地面的高程信息。这是因为地形的起伏会影响图像的投影效果，需要根据实际地形进行校正。具体过程如下：
+
+获取 DEM 数据：从遥感图像、LiDAR 数据或地形测量中获取 DEM。
+读取 DEM 数据：将 DEM 数据加载到内存中，以便在投影过程中使用。
+地面高程校正：在图像坐标转换到地面坐标时，使用 DEM 提供的高程信息进行校正。
+生成正射图像：根据校正后的地面坐标，将图像像素重新映射到正射图像上。
 
 
