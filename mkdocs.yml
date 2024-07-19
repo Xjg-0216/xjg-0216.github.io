@@ -26,6 +26,7 @@ nav:
       - TOOL/ubuntu/02-apt.md
       - TOOL/ubuntu/04-byobu.md
       - TOOL/ubuntu/05-mount.md
+      - TOOL/ubuntu/06-tar.md
     - conda:
       - TOOL/conda.md
   - 图像处理:
