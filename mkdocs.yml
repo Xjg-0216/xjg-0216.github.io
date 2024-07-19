@@ -1,7 +1,7 @@
-site_name: Xujg Site
+site_name: XUJG Site
 site_url: https://xjg-0216.github.io
 site_author: xujg
-site_description: Xujg Site
+site_description: XUJG Site
 
 # [Navigtion]
 nav:
@@ -126,6 +126,7 @@ plugins:
   # https://squidfunk.github.io/mkdocs-material/setup/setting-up-tags/
   # https://squidfunk.github.io/mkdocs-material/plugins/tags/#meta.tags
   - tags
+  # - social
 markdown_extensions:
   # [数学公式支持]
   # https://squidfunk.github.io/mkdocs-material/reference/math/#katex
