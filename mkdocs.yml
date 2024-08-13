@@ -39,6 +39,8 @@ nav:
     - IMAGE_PROCESS/04-ord.md
   - C/C++:
     - C/C++/hdf5.md
+  - computer_network:
+    - computer_network/01-client_server.md
   - UAV:
     - UAV/01-elevation.md
     - UAV/02-Flight_attitude.md
