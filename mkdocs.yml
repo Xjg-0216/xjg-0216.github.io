@@ -46,6 +46,7 @@ nav:
     - UAV/02-Flight_attitude.md
   - 模型部署:
     - deploy/onnx.md
+    - deploy/video.md
   - 其他:
     - Learn/index.md
 

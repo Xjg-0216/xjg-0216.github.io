@@ -274,7 +274,8 @@ conda-pack -n my_env -o my_env.tar.gz
 
 1. 解压缩打包文件：
 ```bash
-mkdir -p ~/my_env tar -xzf my_env.tar.gz -C ~/my_env
+mkdir -p ~/my_env 
+tar -xzf my_env.tar.gz -C ~/my_env
 ```
 
 2. （可选）如果你希望将解压后的环境放置在特定路径下（例如 `/opt/conda/envs/my_env`），你可以将解压后的内容移至该路径：
