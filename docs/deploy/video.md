@@ -3,7 +3,7 @@
  * @Author: xujg
  * @version: 
  * @Date: 2024-08-16 09:55:07
- * @LastEditTime: 2024-08-19 16:11:30
+ * @LastEditTime: 2024-08-21 13:47:26
 -->
 
 # 拉流
@@ -56,6 +56,19 @@ sudo make install
     如果存在版本依赖问题，强制安装与libusb-1匹配的版本环境。`sudo apt-get install libusb-1.0-0=2:1.0.25-1ubuntu1`
 
 
+### 2.设置USB权限
+>当插入一个新的摄像头设备时，系统将自动按照这条规则调整设备的用户组和权限，使得所有用户都可以访问设备，而不再需要使用 sudo。这样，可以在不使用 sudo 的情况下运行程序来访问摄像头。
+
+* 在`/etc/udev/rules.d`下新建文件`99-usbcam.rules`
+* 打开文件`sudo vim 99-usbcam.rules`, 添加`SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="08cc", MODE="0666"`
+* 保存文件并退出
+* 重新加载udev规则：
+  * `sudo udevadm control --reload-rules`
+  * `sudo udevadm trigger`
+这将重新加载所有的`udev`规则，并立即应用新的规则.
+
+
+
 编译opencv
 
 ```bash
@@ -63,6 +76,12 @@ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_GTK
 make -j$(nproc)
 sudo make install
 ```
+
+
+
+
+
+
 
 
 ![alt text](./imgs/01.jpg)
