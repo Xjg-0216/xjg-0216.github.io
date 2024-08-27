@@ -1,80 +1,13 @@
-<!--
- * @Descripttion: 
- * @Author: xujg
- * @version: 
- * @Date: 2024-08-16 09:55:07
- * @LastEditTime: 2024-08-27 18:16:52
--->
+# cpu
 
-# 拉流
-
-> 拉流指的是从某个网络源（通常是一个实时流媒体服务器）获取媒体流（视频或音频流）并进行处理或保存的过程。
-
-
-### 方案一：使用opencv直接处理摄像头视频流
-
-opencv本身就可以直接与摄像头交互，而其实Opencv内部调用了FFmpeg库来处理视频流。
-
-```python
-import cv2
-
-# 打开摄像头
-cap = cv2.VideoCapture(0)
-
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-
-    # 显示图像
-    cv2.imshow('frame', frame)
-
-    # 按q键退出
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-# 释放摄像头并关闭所有窗口
-cap.release()
-cv2.destroyAllWindows()
-```
-
-### 方案二： 利用libuvc进行拉流
-
-### 1. 安装库文件 libuvc.so
-```bash
-git clone https://github.com/libuvc/libuvc.git
-cd libuvc
-mkdir build
-cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
-make
-sudo make install
-```
-
-!!! tip
-    上面编译过程中需要安装libusb-1.0
-    `sudo apt-get install libusb-1.0-0-dev`
-    如果存在版本依赖问题，强制安装与libusb-1匹配的版本环境。`sudo apt-get install libusb-1.0-0=2:1.0.25-1ubuntu1`
-
-
-### 2.设置USB权限
->当插入一个新的摄像头设备时，系统将自动按照这条规则调整设备的用户组和权限，使得所有用户都可以访问设备，而不再需要使用 sudo。这样，可以在不使用 sudo 的情况下运行程序来访问摄像头。
-
-* 在`/etc/udev/rules.d`下新建文件`99-usbcam.rules`
-* 打开文件`sudo vim 99-usbcam.rules`, 添加`SUBSYSTEMS=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="046d", ATTRS{idProduct}=="08cc", MODE="0666"`
-* 保存文件并退出
-* 重新加载udev规则：
-  * `sudo udevadm control --reload-rules`
-  * `sudo udevadm trigger`
-这将重新加载所有的`udev`规则，并立即应用新的规则.
-
-CPU占用率（%CPU）通常表示某个进程或线程在一段时间内使用的CPU时间占整个CPU总时间的百分比。在多核系统中，%CPU可以超过100%，因为这个值是所有CPU核心上使用的CPU时间的总和。
+>CPU占用率（%CPU）通常表示某个进程或线程在一段时间内使用的CPU时间占整个CPU总时间的百分比。在多核系统中，%CPU可以超过100%，因为这个值是所有CPU核心上使用的CPU时间的总和。
 如果一个进程或线程在一个核心上占用了100%的CPU时间，那么它完全使用了该核心的资源。如果一个进程在两个核心上各占用50%的时间，总占用率将显示为100%。
-### 3.查看程序占用了多少cpu核心
+### 1.查看程序占用了多少cpu核心
 ```bash
 top
 ```
 
-### 4. 使用taskset绑定线程到特定cpu核心
+### 2. 使用taskset绑定线程到特定cpu核心
 
 `taskset`命令允许你将进程或线程绑定到特定的CPU核心上，以控制其在特定核心上运行。
 
@@ -94,7 +27,7 @@ top
 taskset -c 0,4 /home/xujg/UAV-VisionLoc-Deploy/cpp/install/UAV-VisionLoc-C_Linux/UAV-VisionLoc-C /home/xujg/UAV-VisionLoc-Deploy/cpp/config.yaml
 ```
 
-### 5. 使用pidstat查看每个核心的占用情况
+### 3. 使用pidstat查看每个核心的占用情况
 `pidstat`是`sysstat`工具包中的一个工具，它可以详细显示每个进程的CPU核心使用情况。
 
 1. 安装 `sysstat` 工具包（如果尚未安装）：
@@ -115,12 +48,12 @@ taskset -c 0,4 /home/xujg/UAV-VisionLoc-Deploy/cpp/install/UAV-VisionLoc-C_Linux
 
 CPU占用率（`%CPU`）和占用时间之间有直接的关系。`%CPU`实际上反映了进程或线程在一段时间内使用了多少CPU资源。下面我详细解释两者之间的关系：
 
-### 6. **CPU占用率的定义**：
+### 4. **CPU占用率的定义**：
 
 - **CPU占用率（`%CPU`）** 是一个时间平均值，表示在一个给定的时间段内，进程或线程使用了多少CPU时间。
 - **占用时间** 是进程或线程在这段时间内实际在CPU上运行的时间。
 
-### 7. **占用率与占用时间的关系**：
+### 5. **占用率与占用时间的关系**：
 
 - **单核系统**：
     
@@ -130,7 +63,7 @@ CPU占用率（`%CPU`）和占用时间之间有直接的关系。`%CPU`实际�
     
     - 在多核系统中，`%CPU`可以超过100%。例如，在一个四核系统中，如果一个进程在1秒内占用了两个核心的全部时间，它的`%CPU`将是200%。
 
-### 8. **计算`%CPU`的公式**：
+### 6. **计算`%CPU`的公式**：
 
 对于一个进程或线程，`%CPU`通常可以用以下方式近似计算：
 
@@ -152,12 +85,12 @@ CPU占用率（`%CPU`）和占用时间之间有直接的关系。`%CPU`实际�
     `%CPU = (1秒 + 1秒) / 1秒 * 100 = 200%`
     
 
-### 9. **示例分析：**
+### 7. **示例分析：**
 
 - 在你的数据中，主进程的`%CPU`显示为`105%-108%`。假设你监测的时间间隔为1秒，这意味着在1秒内，主进程及其所有线程总共使用了1.05到1.08秒的CPU时间。
 - 如果其中一部分时间是在核心4上运行，另一部分时间是在核心3上运行，这就导致了总`%CPU`超过100%。
 
-### 5. **为什么多核系统会出现超过100%的占用率**：
+### 8. **为什么多核系统会出现超过100%的占用率**：
 
 在多核系统中，`%CPU`可以反映进程或线程在多个核心上并行运行的时间总和。例如：
 
@@ -168,4 +101,3 @@ CPU占用率（`%CPU`）和占用时间之间有直接的关系。`%CPU`实际�
 - **CPU占用率（`%CPU`）** 是通过计算进程或线程在给定时间间隔内使用的CPU时间与总时间的比率得出的。
 - 在多核系统中，这个比率可以超过100%，因为多个核心可以同时执行进程的不同部分。
 - **占用时间** 直接影响到`%CPU`的计算：占用时间越长，`%CPU`越高。
-

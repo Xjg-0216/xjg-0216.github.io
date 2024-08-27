@@ -47,6 +47,7 @@ nav:
   - 模型部署:
     - deploy/onnx.md
     - deploy/video.md
+    - deploy/npu.md
   - 其他:
     - Learn/index.md
 
