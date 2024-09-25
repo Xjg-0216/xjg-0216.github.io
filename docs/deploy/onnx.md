@@ -1,10 +1,3 @@
-<!--
- * @Descripttion: 
- * @Author: xujg
- * @version: 
- * @Date: 2024-07-08 13:19:12
- * @LastEditTime: 2024-08-27 18:19:39
--->
 # ONNX
 
 在深度学习算法开发过程中，模型训练与部署是两个环节，pytorch通常只用于训练，获得模型权重文件，而最终部署还有专门的部署平台，例如TensorRT、NCNN、OpenVINO等几十种部署推理平台。
