@@ -72,7 +72,7 @@ $\left[\begin{array}{c}X_c \\ Y_c \\ Z_c \\ 1\end{array}\right]=\left[\begin{arr
 
 #### 相机坐标系到图像坐标系之间的转换
 
-![alt text](image-6.png)
+![alt text](img/image-6.png)
 
 从相机坐标系到图像坐标系是从3D转换到2D, 属于透视投影关系，以下是推导过程：
 
