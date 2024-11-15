@@ -91,6 +91,7 @@ git clone https://github.com/Livox-SDK/livox_ros_driver2.git ws_livox/src/livox_
 #### 运行Livox ROS Driver2
 ```bash
 source install/setup.sh
+# source ~/ros2_foxy/install/local_setup.bash
 cd install/livox_ros_driver2/share/livox_ros_driver2/launch_ROS2
 ros2 launch msg_MID360_launch.py
 ```
