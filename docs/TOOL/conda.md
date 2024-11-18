@@ -156,18 +156,18 @@ conda clean --all
 Conda频道是包集合的源，Conda通过这些渠道来查找、下载和安装软件包。不同的频道可能包含不同版本的软件包，或者有不同的维护和更新策略。
 
 >常见的Conda频道
-**默认频道（defaults）**:
+**默认频道（defaults）**:  
 这是Conda的官方频道，默认情况下所有Conda安装都使用这个频道。它包含了大量常用的包，维护和更新由Anaconda团队负责。
-URL: [https://repo.anaconda.com/pkgs/main/](https://repo.anaconda.com/pkgs/main/)
-**conda-forge**:
-这是一个社区驱动的频道，包含了更多包和更新版本，通常比默认频道更新更快。
-URL: [https://conda-forge.org/](https://conda-forge.org/)
-**r**:
-专门提供 R 语言相关的包。
-URL: https://repo.anaconda.com/pkgs/r/
-**free**:
-包含了所有许可证下的自由和开放源码软件包，这是默认频道的一部分，但在Anaconda 5.0之后被合并到了 main 频道中。
-URL: https://repo.anaconda.com/pkgs/free/
+URL: [https://repo.anaconda.com/pkgs/main/](https://repo.anaconda.com/pkgs/main/)  
+**conda-forge**:  
+这是一个社区驱动的频道，包含了更多包和更新版本，通常比默认频道更新更快。  
+URL: [https://conda-forge.org/](https://conda-forge.org/)  
+**r**:  
+专门提供 R 语言相关的包。  
+URL: https://repo.anaconda.com/pkgs/r/  
+**free**:  
+包含了所有许可证下的自由和开放源码软件包，这是默认频道的一部分，但在Anaconda 5.0之后被合并到了 main 频道中。  
+URL: https://repo.anaconda.com/pkgs/free/  
 
 #### 1.添加频道
 
