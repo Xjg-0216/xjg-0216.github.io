@@ -57,7 +57,7 @@ nav:
   - 其他:
     - Learn/index.md
   - deepLearning:
-    - triplet_loss.md
+    - deepLearning/triplet_loss.md
 
 # [UI]
 # [top]
