@@ -57,6 +57,8 @@ nav:
     - deploy/cpu.md
   - 其他:
     - Learn/index.md
+  - deepLearning:
+    - deepLearning/triplet_loss.md
 
 # [UI]
 # [top]
