@@ -8,14 +8,14 @@
 
 ![alt text](img/image-4.png)
 
-图像处理中涉及到以下四个坐标系：
-* $O_w - X_wY_wZ_w$ : 世界坐标系， 描述相机位置， 单位： m
-* $O_c - X_cY_cZ_c$: 相机坐标系， 光心为原点，单位： m
-* $O_{xy}$: 图像坐标系，光心为图像中点，单位： mm
-* $uv$: 像素坐标系，原点为图像左上角，单位: pixel
-* $P$: 世界坐标系中的一点，即为生活中真实的一点；
-* $p$: 点P在图像中的成像点，在图像坐标系中的坐标为$(x, y)$, 在像素坐标系中的坐标为$(u, v)$
-* $f$：相机焦距，等于$o$与$O_c$的距离，$f = ||o - O_c||$
+图像处理中涉及到以下四个坐标系：  
+* $O_w - X_wY_wZ_w$ : 世界坐标系， 描述相机位置， 单位： m  
+* $O_c - X_cY_cZ_c$: 相机坐标系， 光心为原点，单位： m  
+* $O_{xy}$: 图像坐标系，光心为图像中点，单位： mm  
+* $uv$: 像素坐标系，原点为图像左上角，单位: pixel  
+* $P$: 世界坐标系中的一点，即为生活中真实的一点；  
+* $p$: 点P在图像中的成像点，在图像坐标系中的坐标为$(x, y)$, 在像素坐标系中的坐标为$(u, v)$  
+* $f$：相机焦距，等于$o$与$O_c$的距离，$f = ||o - O_c||$  
 
 
 #### 世界坐标系和相机坐标系之间的转换
@@ -72,13 +72,19 @@ $$
 
 #### 图像坐标系到像素坐标系之间的转换
 
-像素坐标系和图像坐标系都在成像平面上，只是各自的原点和度量单位不一样。图像坐标系的原点为相机光轴与成像平面的交点，通常情况下是成像平面饿中点或者角pricipal point。图像坐标系的单位是mm, 是物理单位，而像素坐标系的单位Pixel， 我们平常描述一个像素点都是几行几列。所以这两者之间的转换关系如下:
+像素坐标系和图像坐标系都在成像平面上，只是各自的原点和度量单位不一样。
+- 图像坐标系的原点为相机光轴与成像平面的交点，通常情况下是成像平面的中心。图像坐标系的单位是mm, 是物理单位，是连续的；
+- 像素坐标系的原点为左上角，单位Pixel，是离散的；
+两者之间的转换关系如下:
 
 ![alt text](img/image-7.png)
 
 $\begin{aligned} & u=\frac{x}{d x}+u_0 \\ & v=\frac{y}{d y}+v_0\end{aligned}$
 
-其中，$dx$和$dy$分别表示每一列和每一行分别代表了多少mm,即1 pixel=dx mm
+其中，$dx$，$dy$，代表了每个像素的实际世界中的物理距离，当然这是相机的固有参数；
+
+> 图像坐标系与像素坐标系之间涉及两点： 度量单位和坐标系原点的转换
+
 
 以齐次坐标形式表示为：
 
@@ -101,45 +107,21 @@ $$
 最后总结为：
 $$
 \begin{aligned}
-Z_c\left[\begin{array}{c}
-u \\
-v \\
-1
-\end{array}\right] & =\left[\begin{array}{ccc}
-\frac{1}{d x} & 0 & u_0 \\
-0 & \frac{1}{d y} & v_0 \\
-0 & 0 & 1
-\end{array}\right]\left[\begin{array}{cccc}
-f & 0 & 0 & 0 \\
-0 & f & 0 & 0 \\
-0 & 0 & 1 & 0
-\end{array}\right]\left[\begin{array}{cc}
-R_{3 \times 3} & T_{3 \times 1} \\
-0 & 1
-\end{array}\right]\left[\begin{array}{c}
-X_w \\
-Y_w \\
-Z_w \\
-1
-\end{array}\right] \\
-& =\left[\begin{array}{cccc}
-f_x & 0 & u_0 & 0 \\
-0 & f_y & v_0 & 0 \\
-0 & 0 & 1 & 0
-\end{array}\right]\left[\begin{array}{cc}
-R_{3 \times 3} & T_{3 \times 1} \\
-0 & 1
-\end{array}\right]\left[\begin{array}{c}
-X_w \\
-Y_w \\
-Z_w \\
-1
-\end{array}\right]
+Z_c \left[ \begin{array}{c} u \\ v \\ 1 \end{array} \right]
+&= \left[ \begin{array}{ccc} \frac{1}{d_x} & 0 & u_0 \\ 0 & \frac{1}{d_y} & v_0 \\ 0 & 0 & 1 \end{array} \right]
+\left[ \begin{array}{ccc} f & 0 & 0 \\ 0 & f & 0 \\ 0 & 0 & 1 \end{array} \right] 
+\left[ \begin{array}{cc} R_{3 \times 3} & T_{3 \times 1} \\ 0 & 1 \end{array} \right]
+\left[ \begin{array}{c} X_w \\ Y_w \\ Z_w \\ 1 \end{array} \right] \\
+&= \left[ \begin{array}{ccc} f_x & 0 & u_0 \\ 0 & f_y & v_0 \\ 0 & 0 & 1 \end{array} \right]
+\left[ \begin{array}{cc} R_{3 \times 3} & T_{3 \times 1} \\ 0 & 1 \end{array} \right]
+\left[ \begin{array}{c} X_w \\ Y_w \\ Z_w \\ 1 \end{array} \right]
 \end{aligned}
 $$
 前者为相机内参， 后者为相机外参
 
-$Z_c$是深度信息，空间中的一个坐标点，可以在图像中找到一个对应的像素点，但是，通过图像中的一个点找到它在空间中对应的点很难，因为$Z_c$s深度信息未知。
+$Z_c$是深度信息，空间中的一个坐标点，可以在图像中找到一个对应的像素点，但是，通过图像中的一个点找到它在空间中对应的点很难，因为$Z_c$深度信息未知。
+!!!note
+    $f_x$, $f_y$ 是相机内参中的两个参数，但并不具备物理含义，只是认为定义的
 
 
 ## exp
