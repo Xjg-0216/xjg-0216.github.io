@@ -44,6 +44,9 @@ $$
 & \triangle P B O_c \sim \triangle p C O_c
 \end{aligned}
 $$
+
+
+
 $$
 \begin{gathered}
 \frac{A B}{o C}=\frac{A O_c}{o O_c}=\frac{P B}{p C}=\frac{X_c}{x}=\frac{Z_c}{f}=\frac{Y_c}{y} \\
