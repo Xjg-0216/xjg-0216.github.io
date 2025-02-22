@@ -7,6 +7,8 @@ site_description: XUJG Site
 nav:
   - README:
     - index.md
+  - GIT:
+    - git.md
   - 工具:
     - vscode C/C++:
       - TOOL/vscode/01-g++.md
