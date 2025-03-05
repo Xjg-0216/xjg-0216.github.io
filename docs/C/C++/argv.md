@@ -1,5 +1,5 @@
 # 命令行参数
-在 C 和 C++ 中，`int main(int argc, char **argv)` 是程序主函数的一种标准签名，用于接收命令行参数。你提到的问题“后面为什么要用 `char**`”涉及到为什么使用 `char**`（指向字符指针的指针）来表示命令行参数。我们来一步步分析其原因，并详细讲解背后的设计逻辑。
+在 C 和 C++ 中，`int main(int argc, char **argv)` 是程序主函数的一种标准签名，用于接收命令行参数。。
 
 ---
 
@@ -181,6 +181,35 @@ int main(int argc, char **argv) {
     return 0;
 }
 ```
+#### 6.4 argv中字符串转换为其他类型
+```cpp
+#include <iostream>
+#include <cstdlib>  // for atoi, atof
+
+int main(int argc, char **argv)
+{
+  if (argc < 3)
+  {
+    std::cout << "Please provide at least two arguments" >> std::endl;
+  }
+
+  // 获取第一个参数并转换为整数
+  int int_value = std::atoi(argv[1]);
+  // 获取第二个参数并转换为浮点数
+  float float_value = std::atof(argv[2]);
+
+  std::cout << "Integer value: " << int_value << std::endl;
+  std::cout << "Float value: " << float_value << std::endl;
+}
+
+```
+
+
+
+
+
+
+
 
 ---
 

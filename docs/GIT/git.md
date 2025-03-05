@@ -149,6 +149,10 @@
     ```bash
     git checkout -b <branch_name>
     ```
+    如果远程分支而本地没有该分支，通过以下命令在本地创建`branch_name`分支，并追踪远程`origin/branch_name`
+    ```bash
+    git checkout -b <branch_name> origin/<branch_name>
+    ```
     
 4. **合并分支** 将当前分支与目标分支合并：
     
