@@ -7,6 +7,9 @@ site_description: XUJG Site
 nav:
   - README:
     - index.md
+  - GIT:
+    - GIT/01-git.md
+    - GIT/02-git_lfs.md
   - 工具:
     - vscode C/C++:
       - TOOL/vscode/01-g++.md
@@ -31,10 +34,10 @@ nav:
       - TOOL/ubuntu/08-scp.md
     - conda:
       - TOOL/conda.md
-    - git:
-      - TOOL/git/01-git_lfs.md
     - RK3588:
       - TOOL/rk3588.md
+    - 共享热点:
+      - TOOL/network.md
   - 图像处理:
     # - IMAGE_PROCESS/01-ISP.md
     - IMAGE_PROCESS/02-OpenDroneMap.md
@@ -42,7 +45,12 @@ nav:
     - IMAGE_PROCESS/04-ord.md
     - IMAGE_PROCESS/05-fov.md
   - C/C++:
+    - C/C++/class1.md
+    - C/C++/class2.md
+    - C/C++/class3.md
     - C/C++/hdf5.md
+    - C/C++/char.md
+    - C/C++/argv.md
   - computer_network:
     - computer_network/01-client_server.md
   - UAV:
