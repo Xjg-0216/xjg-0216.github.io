@@ -45,12 +45,13 @@ nav:
     - IMAGE_PROCESS/04-ord.md
     - IMAGE_PROCESS/05-fov.md
   - C/C++:
-    - C/C++/class1.md
-    - C/C++/class2.md
-    - C/C++/class3.md
+    - C/C++/01-class1.md
+    - C/C++/02-class2.md
+    - C/C++/03-class3.md
+    - C/C++/04-memory.md
+    - C/C++/05-argv.md
+    - C/C++/06-char.md
     - C/C++/hdf5.md
-    - C/C++/char.md
-    - C/C++/argv.md
   - computer_network:
     - computer_network/01-client_server.md
   - UAV:
