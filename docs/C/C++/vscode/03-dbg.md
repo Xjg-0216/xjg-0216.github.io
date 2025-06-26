@@ -1,10 +1,4 @@
-<!--
- * @Descripttion: 
- * @Author: xujg
- * @version: 
- * @Date: 2024-07-09 22:27:40
- * @LastEditTime: 2025-06-27 00:56:34
--->
+
 # 三 GDB调试器
 
 ## 1. 概述
