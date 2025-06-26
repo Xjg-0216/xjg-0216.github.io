@@ -51,6 +51,8 @@ nav:
     - C/C++/04-memory.md
     - C/C++/05-argv.md
     - C/C++/06-char.md
+    - C/C++/07-const.md
+    - C/C++/08-point_reference.md
     - C/C++/hdf5.md
   - computer_network:
     - computer_network/01-client_server.md
