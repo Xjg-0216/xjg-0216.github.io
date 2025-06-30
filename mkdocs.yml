@@ -37,6 +37,7 @@ nav:
     
   - C/C++:
     - tool:
+      - C/C++/vscode/00-make.md 
       - C/C++/vscode/01-g++.md
       - C/C++/vscode/02-compile.md
       - C/C++/vscode/03-dbg.md
@@ -57,6 +58,7 @@ nav:
       - C/C++/08-point_reference.md
       - C/C++/09-type_modify.md
       - C/C++/10-type_convert.md
+      - C/C++/11-define.md
       - C/C++/hdf5.md
   - computer_network:
     - computer_network/01-client_server.md
