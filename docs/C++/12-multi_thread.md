@@ -389,6 +389,77 @@ void consumer() {
 | 条件变量本身不保存状态                        | `notify_one()` 不会“记住”曾经调用过，如果此时没人等待，通知会丢失 |
 | 避免死锁                               | 修改条件时应先加锁，通知时应解锁或在锁内快速通知                  |
 
+### 4.3 std::atomic
+在 C++ 中，`std::atomic` 是用于 **多线程编程** 中的一种类型，提供了**原子操作**支持，用于避免数据竞争（data race），实现线程安全的数据访问和修改
+
+
+**原子读写**
+
+```cpp
+std::atomic<int> value(0);
+
+int x = value.load();   // 原子读取
+value.store(10);        // 原子写入
+```
+
+**原子加减**
+
+```cpp
+value++;   // 或 value.fetch_add(1);
+value--;   // 或 value.fetch_sub(1);
+```
+
+**CAS（Compare-And-Swap）**
+
+```cpp
+int expected = 5;
+int desired = 10;
+if (value.compare_exchange_strong(expected, desired)) {
+    // 当前 value == expected，成功替换为 desired
+} else {
+    // 替换失败，expected 被更新为当前 value 的值
+}
+```
+
+**示例：多线程安全加法**
+
+```cpp
+#include <iostream>
+#include <atomic>
+#include <thread>
+
+std::atomic<int> counter(0);
+
+void increment() {
+    for (int i = 0; i < 1000; ++i) {
+        counter++;
+    }
+}
+
+int main() {
+    std::thread t1(increment);
+    std::thread t2(increment);
+    t1.join();
+    t2.join();
+    std::cout << "Counter: " << counter << std::endl;
+}
+```
+
+若不使用 `std::atomic`，则会发生数据竞争，导致计数不准确。
+
+---
+
+**常用成员函数（以 `std::atomic<int>` 为例）**
+
+|函数名|含义|
+|---|---|
+|`load()`|读取当前值|
+|`store(val)`|写入新值|
+|`exchange(val)`|设置新值并返回旧值|
+|`compare_exchange_strong(expected, desired)`|原子比较并替换|
+|`fetch_add(n)` / `fetch_sub(n)`|原子加/减|
+
+
 
 ## 5. 线程池
 
