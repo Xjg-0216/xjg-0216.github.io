@@ -1,4 +1,4 @@
-# CMake&make&Makefile
+# 零 CMake&make&Makefile
 
 
 ## 🔧 1. make
