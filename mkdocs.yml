@@ -35,7 +35,7 @@ nav:
     - IMAGE_PROCESS/03-reprojection.md
     - IMAGE_PROCESS/04-ord.md
     
-  - C/C++:
+  - C++:
     - tool:
       - C++/vscode/00-make.md 
       - C++/vscode/01-g++.md
@@ -61,6 +61,7 @@ nav:
       - C++/10-type_convert.md
       - C++/11-define.md
       - C++/12-multi_thread.md
+      - C++/13-lambda.md
       - C++/hdf5.md
   - computer_network:
     - computer_network/01-client_server.md
