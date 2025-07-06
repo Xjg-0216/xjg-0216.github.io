@@ -75,6 +75,7 @@ nav:
     - UAV/03-livox_ros_driver.md
     - UAV/04-intro.md
   - 模型部署:
+    - deploy/01-rknn.md
     - deploy/onnx.md
     - deploy/video.md
     - deploy/npu.md
