@@ -218,8 +218,8 @@ markdown_extensions:
   - pymdownx.emoji  # 支持Emoji
   # - autolink  # 自动将URL转换为链接
   # - headerid  # 为标题添加锚点
-  - pymdownx.charts  # 支持插入图表
-  - tasklist  # 支持任务列表语法
+  # - pymdownx.charts  # 支持插入图表
+  # - tasklist  # 支持任务列表语法
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.keys
