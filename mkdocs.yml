@@ -216,7 +216,7 @@ markdown_extensions:
   - def_list  # 支持定义列表
   # - smartypants  # 智能引用
   - pymdownx.emoji  # 支持Emoji
-  - autolink  # 自动将URL转换为链接
+  # - autolink  # 自动将URL转换为链接
   # - headerid  # 为标题添加锚点
   - pymdownx.charts  # 支持插入图表
   - tasklist  # 支持任务列表语法
