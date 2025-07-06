@@ -211,15 +211,15 @@ markdown_extensions:
   - footnotes
   - pymdownx.tilde  # 支持删除线
   - pymdownx.mark  # 支持背景高亮
-  # - tables  # 改进表格显示
+  - tables  # 改进表格显示
   # - abbr  # 支持扩展引用块
-  # - def_list  # 支持定义列表
+  - def_list  # 支持定义列表
   # - smartypants  # 智能引用
   - pymdownx.emoji  # 支持Emoji
-  # - autolink  # 自动将URL转换为链接
+  - autolink  # 自动将URL转换为链接
   # - headerid  # 为标题添加锚点
-  # - pymdownx.charts  # 支持插入图表
-  # - tasklist  # 支持任务列表语法
+  - pymdownx.charts  # 支持插入图表
+  - tasklist  # 支持任务列表语法
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.keys
