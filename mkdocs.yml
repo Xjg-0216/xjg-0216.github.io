@@ -27,6 +27,8 @@ nav:
     - 共享热点:
       - TOOL/network.md
   - 图像处理:
+    - ISP:
+      - IMAGE_PROCESS/isp/isp_pipeline.md
     - opencv:
       - IMAGE_PROCESS/opencv/01-mat.md
     - ByteTrack:
