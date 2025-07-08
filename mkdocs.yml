@@ -35,7 +35,6 @@ nav:
       - IMAGE_PROCESS/bytetrack.md
     - NetVLAD:
       - IMAGE_PROCESS/NetVLAD.md
-    # - IMAGE_PROCESS/01-ISP.md
     - IMAGE_PROCESS/01-img0.md
     - IMAGE_PROCESS/02-OpenDroneMap.md
     - IMAGE_PROCESS/03-reprojection.md
