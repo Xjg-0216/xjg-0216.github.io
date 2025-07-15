@@ -567,3 +567,88 @@ int main(){
 ```
 
 浅拷贝在对象的拷贝创建时存在风险，即被拷贝的对象析构释放资源后，拷贝对象析构时再次释放一个已经释放的资源，深拷贝的结果是两个对象之间没有任何关系，各自成员地址不同。
+
+## 9.c++的异常处理方法
+
+常有的异常有：
+- 数组下标越界
+- 除法计算时除数为0
+- 动态分配空间不足
+
+### 9.1 try/throw/catch关键字
+
+| 关键字     | 作用                               |
+| ------- | -------------------------------- |
+| `try`   | 定义一个可能抛出异常的代码块。必须和 `catch` 搭配使用。 |
+| `throw` | 抛出一个异常，可以是内建类型或自定义类型。            |
+| `catch` | 捕获异常，并定义如何处理该异常。                 |
+
+
+cpp中的异常处理机制主要使用try, throw和catch三个关键字，其在程序中的用法如下：
+```cpp
+#include<iostream>
+uusing namespace std;
+
+int main()
+{
+   double m = 1, n = 0;
+   try{
+      cout <<"before dividing" << endl;
+      if (n == 0)
+      {
+         throw -1; // 抛出int型异常
+      }
+      else if (m == 0){
+         throw -1.0; //抛出double型异常
+      }
+      else{
+         cout << m / n << endl;
+      }
+      cout << "after dividing" << endl;
+   }
+   catch (double d){
+      cout << "catch (double)" << d << endl;
+   }
+   catch (...){
+      cout << "catch (...)" << endl;
+   }
+   cout << "finish" << endl;
+   return 0;
+}
+
+```
+## 10 静态变量什么时候初始化
+
+1. 初始化只有一次，但是可以多次赋值，在主程序之前，编译器已经为其分配好了内存
+2. 静态局部变量和全局变量一样，数据都存放在全局区域，所以在主程序之前，编译器已经为其分配好了内存，但是C和C++中静态局部变量的初始化节点又有点不一样。在C中，初始化发生在代码执行之前，编译阶段分配好内存之后，就会进行初始化。所以我们看到在C语言中无法使用变量对静态局部变量进行初始化，在程序运行结束，变量所处的全局内存会被全局回收；
+3. 而在C++中，在执行相关代码时才会初始化，主要是由于C++引入对象后，要进行初始化执行相应构造函数和析构函数，在构造函数或析构函数中经常会需要进行某些程序中需要进行的特定操作，并非简单的分配内存，所以C++标准定为全局或静态对象是有首次用到时才会进行构造，所以在C++中是可以使用变量对静态局部变量进行初始化；
+
+
+
+## 11 malloc/realloc/calloc的区别
+
+malloc
+
+```cpp
+void* malloc(unsigned int num_size);
+int *p = malloc(20 * sizeof(int)); // 申请20个int类型的空间
+```
+
+calloc
+
+```cpp
+void* calloc(size_t n, size_t size);
+int *p = calloc(20, sizeof(int)); 
+```
+
+省去了人为空间计算，malloc申请的空间的值是随机的， calloc申请的空间的值是初始化为0的；
+
+realloc
+
+```cpp
+void realloc(void *p,  size_t new_size);
+```
+给动态分配的空间分配额外的空间，用于扩充容量
+
+
+
