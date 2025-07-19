@@ -166,6 +166,10 @@
     git branch -d <branch_name>  # 删除本地分支
     git push origin --delete <branch_name>  # 删除远程分支
     ```
+6. **清理本地缓存引用** git 本地保留了远程分支的缓存引用，本地需要刷新
+    ```bash
+    git remote prune origin
+    ```
     
 
 ### 七、远程仓库操作
