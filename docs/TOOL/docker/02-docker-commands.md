@@ -2,28 +2,25 @@
 
 参考[https://docs.docker.com/reference/cli/docker/](https://docs.docker.com/reference/cli/docker/)
 
-### docker简介
+## 1. docker简介
 Docker 是一个应用打包、分发、部署的工具
->打包：把软件运行所需的依赖、第三方库、软件打包到一起，变成一个安装包
-分发：把打包好的“安装包”上传到一个镜像仓库，其他人可以非常方便的获取和安装
-部署：拿着“安装包”就可以一个命令运行起来你的应用，自动模拟出一摸一样的运行环境，不管是在 Windows/Mac/Linux
+- **打包**：把软件运行所需的依赖、第三方库、软件打包到一起，变成一个安装包
+- **分发**：把打包好的“安装包”上传到一个镜像仓库，其他人可以非常方便的获取和安装
+- **部署**：拿着“安装包”就可以一个命令运行起来你的应用，自动模拟出一摸一样的运行环境，不管是在 Windows/Mac/Linux确保了不同机器上都是一致的运行环境
+- **镜像**：镜像包含运行应用程序所需的所有内容——代码或二进制文件、运行时、依赖项以及所需的任何其他文件系统对象。可以理解为软件安装包，可以方便的进行传播和安装。**镜像是一个程序安装包，用来生成容器**
+- **容器**：容器只不过是一个正在运行的进程，它还应用了一些附加的封装功能，以使其与主机和其他容器保持隔离。容器隔离的最重要方面之一是每个容器都与自己的私有文件系统进行交互；该文件系统由Docker镜像提供。**容器是镜像运行的实例，它是一个可读写的，运行中的进程环境**
 
-确保了不同机器上都是一致的运行环境
-
-镜像：镜像包含运行应用程序所需的所有内容——代码或二进制文件、运行时、依赖项以及所需的任何其他文件系统对象。可以理解为软件安装包，可以方便的进行传播和安装。
-容器：容器只不过是一个正在运行的进程，它还应用了一些附加的封装功能，以使其与主机和其他容器保持隔离。容器隔离的最重要方面之一是每个容器都与自己的私有文件系统进行交互；该文件系统由Docker镜像提供。
-
-### 获取镜像
+## 2. 获取镜像
 获取镜像的方式有两种： 
 * 使用他人打包好，并通过网络（主要是docker官方的docker hub和一些类似的镜像托管网站）进行分享的镜像；
 * 在本地将镜像保存为本地文件，直接使用生成的文件进行共享。后者在网络首先环境下更加方便；
 
-##### 从网络
+### 2.1 从网络
 这里主要可以借助于两条指令。一个是 `docker pull` ，另一个是 `docker run `
 ```bash
 docker pull [OPTIONS] NAME[:TAG|@DIGEST]
 ```
-顾名思义，就是从仓库中拉取（pull）指定的镜像到本机。看它的配置项，对于可选项我们暂不需要管，我们重点关注后面的 NAME 和紧跟的两个互斥的配置项。
+从仓库中拉取（pull）指定的镜像到本机。
 对应于这里的三种构造指令的方式，文档中给出了几种不同的拉取方式：
 
 * NAME
@@ -43,7 +40,7 @@ docker pull [OPTIONS] NAME[:TAG|@DIGEST]
 docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 ```
 
-`docker run` 命令首先在指定的映像上创建一个可写的容器层，然后使用指定的命令启动它。
+`docker run` 命令首先在指定的映像上创建一个可写的容器层，然后使用指定的命令启动它
 
 这个实际上会自动从官方仓库中下载本地没有的镜像。更多是使用会在后面创建容器的部分介绍。
 
@@ -85,253 +82,572 @@ hello-world                                            latest              bf756
 
 ```
 
-##### 从他人处
+### 2.2 从他人处
 关于如何保存镜像在后面介绍，其涉及到的指令为 `docker save` ，这里主要讲如何加载已经导出的镜像文件。
 ```bash
 docker load [OPTIONS]
 ```
 例子可见：[https://docs.docker.com/engine/reference/commandline/load/#examples](https://docs.docker.com/engine/reference/commandline/load/#examples)
 
-##### 如何使用镜像
-单纯的使用镜像实际上就是围绕指令 `docker run` 来的。
-
-首先我们通过使用 `docker images` 来查看本机中已经保存的镜像信息列表。
-```bash
-$ sudo docker images
-REPOSITORY                                             TAG                 IMAGE ID            CREATED             SIZE
-```
+## 3. 创建并启动一个新容器
 
 
-通过运行 `docker run` 获取镜像并创建容器。
+`docker run` 的语法非常灵活，参数也很多，我们来 **分模块详细讲解每个参数的意义和用法**
+
+
+
 ```bash
 docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
 ```
-run包含很多的参数和配置项，这里以nvidia-docker为例[https://github.com/NVIDIA/nvidia-docker#usage](https://github.com/NVIDIA/nvidia-docker#usage)：
-```bash
-sudo docker run --rm -it --gpus all --name test -v /home/mydataroot:/tcdata:ro nvidia/cuda:10.0-base /bin/bash
-```
-这条指令做的就是：
 
-启动Docker容器时，必须首先确定是要在后台以 “分离” 模式还是在默认前台模式下运行容器： `-d `，这里没有指定 `-d` 则是使用默认前台模式运行。两种模式下，部分参数配置不同，这部分细节可以参考文档：https://docs.docker.com/engine/reference/run/#detached-vs-foreground
-使用镜像 `nvidia/cuda:10.0-base` 创建容器，并对容器起一个别名 `test `。
-对于该容器，开启gpu支持，并且所有GPU都可用，但是前提你得装好`nvidia-docker`。
-`--rm` 表示退出容器的时候自动移除容器，在测试环境等场景下很方便，不用再手动删除已经创建的容器了。
-`-t` 和 `-i` ：这两个参数的作用是，为该docker创建一个伪终端，这样就可以进入到容器的交互模式。
-后面的 `/bin/bash` 的作用是表示载入容器后运行 `bash` 。docker中必须要保持一个进程的运行，要不然整个容器启动后就会马上`kill itself`，这样当你使用 `docker ps` 查看启动的容器时，就会发现你刚刚创建的那个容器并不在已启动的容器队列中。 这个 `/bin/bash` 就表示启动容器后启动 `bash` 。
-`-v `表示将本地的文件夹以只读`:ro `，读写可以写为 `:rw` ，如果不加，则默认的方式是读写的方式挂载到容器中的 /tcdata 目录中。
-```bash
-(base) xujg@xujg-ASUS:~/文档/xjg-docs$ sudo docker run -it ubuntu bash
-Unable to find image 'ubuntu:latest' locally
-latest: Pulling from library/ubuntu
-7b1a6ab2e44d: Pull complete 
-Digest: sha256:626ffe58f6e7566e00254b638eb7e0f3b11d4da9675088f4781a50ae288f3322
-Status: Downloaded newer image for ubuntu:latest
-root@bf26f5984d7f:/# exit
-exit
-(base) xujg@xujg-ASUS:~/文档/xjg-docs$ sudo docker images
-REPOSITORY    TAG         IMAGE ID       CREATED       SIZE
-ubuntu        latest      ba6acccedd29   2 years ago   72.8MB
-hello-world   latest      feb5d9fea6a5   2 years ago   13.3kB
-nvidia/cuda   10.0-base   97cca2bac989   2 years ago   109MB
-(base) xujg@xujg-ASUS:~/文档/xjg-docs$ sudo docker ps # 查看正在运行的容器信息
-CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
-(base) xujg@xujg-ASUS:~/文档/xjg-docs$ sudo docker ps -a # 查看所有容器信息
-CONTAINER ID   IMAGE         COMMAND    CREATED          STATUS                      PORTS     NAMES
-bf26f5984d7f   ubuntu        "bash"     51 seconds ago   Exited (0) 23 seconds ago             pensive_archimedes
-048496d67740   hello-world   "/hello"   27 minutes ago   Exited (0) 27 minutes ago             angry_dhawan
+* `OPTIONS`: 运行参数（配置容器的运行方式）
+* `IMAGE`: 要运行的镜像名（如 `ubuntu:20.04`）
+* `COMMAND`: 镜像内要执行的命令（可选，如 `bash`）
 
-```
-当我们想要删除指定的镜像的时候，我们可以使用 `sudo docker rmi` 来进行处理。
 
-`docker rmi [OPTIONS] IMAGE [IMAGE...]`
-后面可以跟多个镜像。这里支持三种方式：
-* 使用IMAGE ID：`docker rmi fd484f19954f`
-* 使用TAG： `docker rmi test:latest`
-* 使用DIGEST： `docker rmi localhost:5000/test/busybox@sha256:cbbf2f9a99b47fc460d422812b6a5adff7dfee951d8fa2e4a98caa0382cfbdbf`
-#### 如何使用容器
-##### 创建容器
-从前面可以了解到，我们可以通过使用 docker run 创建前台运行的容器，创建好了容器我们会面临如何使用的问题。
 
-##### 进入容器
-进入容器的方法都是一致的，但是这里会面临两种情况，一种是已经退出的容器，另一种是运行在后台的分离模式下的容器。
+### 3.1 启动模式
 
-##### 已退出的容器
-```bash
-$ sudo docker run -it --gpus all --name testv3 -v /home/lart/Downloads/:/data nvidia/cuda:10.0-base bash
-root@efd722f0321f:/# exit
-exit
-(pt16) lart@god:~/Coding/RGBSOD_MS$ sudo docker ps -a
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-efd722f0321f        nvidia/cuda:10.0-base   "bash"              19 seconds ago      Exited (0) 3 seconds ago                           testv3
-```
+| 参数     | 说明             | 示例                           |
+| ------ | -------------- | ---------------------------- |
+| `-d`   | 后台运行（detached） | `docker run -d nginx`        |
+| `-it`  | 交互模式 + 伪终端     | `docker run -it ubuntu bash` |
+| `--rm` | 容器退出时自动删除      | `docker run --rm ubuntu`     |
 
-可以看到，我这里存在一个已经退出的容器。我们想要进入退出的容器首先需要启动已经退出的容器：
-```bash
-(pt16) lart@god:~/Coding/RGBSOD_MS$ sudo docker start testv3
-testv3
-(pt16) lart@god:~/Coding/RGBSOD_MS$ sudo docker ps -a
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-efd722f0321f        nvidia/cuda:10.0-base   "bash"              31 seconds ago      Up 1 second    
+📝 说明：
 
-```
-关于重启容器，使用 `docker restart` 也是可以的。为了验证，我们先使用 `docker stop` 停止指定容器。再进行测试
+* `-i`: 保持输入流打开
+* `-t`: 分配终端
+
+
+### 3.2 容器命名
+
+| 参数       | 说明    | 示例                              |
+| -------- | ----- | ------------------------------- |
+| `--name` | 指定容器名 | `docker run --name myweb nginx` |
+
+
+### 3.3 端口映射
+
+| 参数   | 说明            | 示例                            |
+| ---- | ------------- | ----------------------------- |
+| `-p` | 将宿主机端口映射到容器端口 | `docker run -p 8080:80 nginx` |
+
+🌐 含义：本机的 `8080` 对应容器的 `80`，可通过 `localhost:8080` 访问。
+
+
+### 3.4 卷挂载（数据持久化）
+
+| 参数   | 说明          | 示例                                      |
+| ---- | ----------- | --------------------------------------- |
+| `-v` | 将宿主机目录挂载到容器 | `docker run -v /host/data:/data ubuntu` |
+
+📁 含义：容器内 `/data` 目录与宿主机 `/host/data` 同步。
+
+当然可以！Docker 中的挂载方式主要有两种：**绑定挂载（bind mount）** 和 **命名卷挂载（named volume）**。这两种方式都用于**将数据从宿主机“挂载”到容器中**，但它们的机制、用途和管理方式不同。
+
+Docker 中的挂载方式主要有两种：绑定挂载（bind mount） 和 命名卷挂载（named volume）。这两种方式都用于将数据从宿主机“挂载”到容器中，但它们的机制、用途和管理方式不同
+#### 3.4.1 绑定挂载（Bind Mount）
+
 
 ```bash
-$ sudo docker stop testv3
-testv3
-$ sudo docker ps -a
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-efd722f0321f        nvidia/cuda:10.0-base   "bash"              2 minutes ago       Exited (0) 4 seconds ago                           testv3
-$ sudo docker restart testv3  # restart 不仅可以重启关掉的容器，也可以重启运行中的容器
-testv3
-$ sudo docker ps -a
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-efd722f0321f        nvidia/cuda:10.0-base   "bash"              2 minutes ago       Up 1 second 
+-v /宿主机/目录:/容器/目录
 ```
-##### 后台分离模式运行的容器
-对于创建分离模式的容器我们可以使用 `docker run -d` 。
-另外前面提到的 `start` 或者 `restart` 启动的容器会自动以分离模式运行。
 
-##### 进入启动的容器
-对于已经启动的容器，我们可以使用 `attach` 或者 `exec` 进入该容器，但是更推荐后者，区别是`exec`退出容器时，自动关闭
+**demo**
+```bash
+docker run -v /home/user/html:/usr/share/nginx/html nginx
+```
+
+**特点**
+
+| 项目   | 内容                          |
+| ---- | --------------------------- |
+| 来源   | 宿主机的实际路径                    |
+| 持久性  | 宿主机目录一直存在，容器删除也不会删除数据       |
+| 管理   | 由你手动管理（Docker 不负责）          |
+| 可见性  | 宿主机和容器实时同步（适合本地开发）          |
+| 权限控制 | 可设置只读：`-v /src:/dst:ro`     |
+| 灵活性  | 可以挂载任意路径，包括 socket、日志、配置文件等 |
+
+**使用场景**
+
+* 本地开发（例如代码热更新）
+* 指定配置文件路径
+* 挂载日志、模型、视频文件等
+
+
+#### 3.4.2 命名卷挂载（Named Volume）
+
+**demo**
 
 ```bash
-$ sudo docker ps -a
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-efd722f0321f        nvidia/cuda:10.0-base   "bash"              16 minutes ago      Exited (0) 2 minutes ago                           testv3
-$ sudo docker start testv3
-testv3
-$ sudo docker ps -a
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-efd722f0321f        nvidia/cuda:10.0-base   "bash"              16 minutes ago      Up 2 seconds                                       testv3
-
-$ sudo docker exec -it testv3 bash
-root@efd722f0321f:/# exit
-exit
-$ sudo docker ps -a # 可以看到exec退出后不会把容器关闭
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-efd722f0321f        nvidia/cuda:10.0-base   "bash"              17 minutes ago      Up 36 seconds                                      testv3
-
-$ sudo docker attach testv3
-root@efd722f0321f:/# exit
-exit
-$ sudo docker ps -a  # 可以看到attach退出后会把容器关闭
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-efd722f0321f        nvidia/cuda:10.0-base   "bash"              18 minutes ago      Exited (0) 2 seconds ago                           testv3
-```
-##### 删除容器
-```bash
-sudo docker rm [OPTIONS] CONTAINER [CONTAINER...]
-```
-##### 停止正在运行的容器
-
-`docker stop` ：此方式常常被翻译为优雅的停止容器。
-`docker stop` 容器ID或容器名
-`-t` ：关闭容器的限时，如果超时未能关闭则用 kill 强制关闭，默认值10s，这个时间用于容器的自己保存状态， `docker stop -t=60` 容器ID或容器名
-`docker kill` ：直接关闭容器
-`docker kill` 容器ID或容器名
-
-##### 从本机与容器中互相拷贝数据
-`docker cp` ：用于容器与主机之间的数据拷贝。
-```bash
-docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH|-
-docker cp [OPTIONS] SRC_PATH|- CONTAINER:DEST_PATH
-```
-The docker cp utility copies the contents of SRC_PATH to the DEST_PATH. You can copy from the container’s file system to the local machine or the reverse, from the local filesystem to the container.
-If - is specified for either the SRC_PATH or DEST_PATH, you can also stream a tar archive from STDIN or to STDOUT.
-The CONTAINER can be a running or stopped container.
-The SRC_PATH or DEST_PATH can be a file or directory.
-由于容器内的数据与容器外的数据并不共享，所以如果我们想要向其中拷贝一些数据，可以通过这个指令来进行复制。当然，另一个比较直接的想法就是通过挂载的目录进行文件共享与复制。
-
-##### 如何生成镜像
-主要包含两种方式，一种是基于构建文件`Dockerfile`和 `docker build` 的自动构建，一种是基于 `docker commit` 提交对于现有容器的修改之后生成镜像。
-```bash
-docker build [OPTIONS] PATH | URL | -
+docker volume create myvolume
+docker run -v myvolume:/usr/share/nginx/html nginx
 ```
 
-更多细节可见[https://docs.docker.com/engine/reference/commandline/build/](https://docs.docker.com/engine/reference/commandline/build/)
+**特点**：
 
-这里用到了Dockerfile，这些参考资料不错：
+| 项目   | 内容                                                   |
+| ---- | ---------------------------------------------------- |
+| 来源   | Docker 自动创建和管理的目录（通常在 `/var/lib/docker/volumes/...`） |
+| 持久性  | 与容器生命周期无关（删除容器后仍然保留）                                 |
+| 管理   | 通过 `docker volume` 命令集中管理                            |
+| 可见性  | 默认宿主机看不到数据（除非进入 volume 路径）                           |
+| 数据隔离 | 容器之间可以共享 Volume，但默认互不影响                              |
+| 可移植性 | 可以用于备份/迁移（配合 `docker volume` 命令）                     |
 
-你必须知道的Dockerfile：[https://www.cnblogs.com/edisonchou/p/dockerfile_inside_introduction.html](https://www.cnblogs.com/edisonchou/p/dockerfile_inside_introduction.html)
-对于已有的Dockerfile文件，我们可以使用如下指令生成镜像：
+**使用场景**
+
+* 数据库存储（如 MySQL、PostgreSQL）
+* 需要持久化数据的服务
+* 容器间共享数据（可配合 `docker-compose`）
+
+
+**对比总结表**
+
+| 对比项     | 绑定挂载（Bind Mount） | 命名卷（Named Volume）                          |
+| ------- | ---------------- | ------------------------------------------ |
+| 数据来源    | 宿主机上任意目录         | Docker 管理的路径 `/var/lib/docker/volumes/...` |
+| 创建方式    | 自动或手动创建宿主机路径     | `docker volume create` 创建                  |
+| 持久性     | 与宿主机路径相关         | 容器删除也不会删除 volume                           |
+| 数据共享    | 手动配置相同宿主机路径      | 多个容器可挂载同一个 volume                          |
+| 容器删除后数据 | 仍保留              | 仍保留                                        |
+| 管理方便性   | 不易统一管理           | `docker volume ls/inspect/rm` 管理           |
+| 文件访问性   | 宿主机上可直接访问        | 宿主机默认不可见                                   |
+| 推荐场景    | 本地开发、调试、挂载配置或日志等 | 数据持久化、数据库、共享缓存                             |
+
+**命令参考**
+
+- 创建命名卷
 
 ```bash
-# 使用'.'目录下的Dockerfile文件。注意结尾的路径`.`，这里给打包的镜像指定了TAG
-$ docker build -t vieux/apache:2.0 .
-# 也可以指定多个TAG
-$ docker build -t whenry/fedora-jboss:latest -t whenry/fedora-jboss:v2.1 .
-# 也可以不使用'.'目录下的Dockerfile文件，而是使用-f指定文件
-$ docker build -f dockerfiles/Dockerfile.debug -t myapp_debug .
-```
-打包完之后，我们就可以在 `docker images` 中看到新增的镜像了。
-
-另一种方式，通过`docker commit`
-```bash
-docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
-```
-比如这样
-```bash
-$ docker ps
-CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS              NAMES
-c3f279d17e0a        ubuntu:12.04        /bin/bash           7 days ago          Up 25 hours                            desperate_dubinsky
-197387f1b436        ubuntu:12.04        /bin/bash           7 days ago          Up 25 hours                            focused_hamilton
-$ docker commit c3f279d17e0a  svendowideit/testimage:version3
-f5283438590d
-$ docker images
-REPOSITORY                        TAG                 ID                  CREATED             SIZE
-svendowideit/testimage            version3            f5283438590d        16 seconds ago      335.7 MB
+docker volume create mydata
 ```
 
-##### 如何分享镜像
-###### 上传到在线存储库
-上传到Docker Hub：[https://docs.docker.com/get-started/part3/](https://docs.docker.com/get-started/part3/)
-上传到阿里云：[https://blog.csdn.net/xiayto/article/details/104133417/](https://blog.csdn.net/xiayto/article/details/104133417/)
-###### 本地导出分享
-这里基于指令 `docker save`
-
-`docker save [OPTIONS] IMAGE [IMAGE...]`
-Produces a tarred repository to the standard output stream. Contains all parent layers, and all tags + versions, or specified repo:tag , for each argument provided.
-
-具体的例子可见：[https://docs.docker.com/engine/reference/commandline/save/#examples](https://docs.docker.com/engine/reference/commandline/save/#examples)
+- 使用命名卷
 
 ```bash
-$ sudo docker ps -a
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                         PORTS               NAMES
-153999a1dfb2        hello-world             "/hello"            2 hours ago         Exited (0) 2 hours ago                             naughty_euler
-$ sudo docker images
-REPOSITORY                                             TAG                 IMAGE ID            CREATED             SIZE
-hello-world                                            latest              bf756fb1ae65        7 months ago        13.3kB
-$ sudo docker save -o hello-world-latest.tar hello-world:latest
-$ ls
-hello-world-latest.tar
-
-$ sudo docker rmi hello-world:latest
-Error response from daemon: conflict: unable to remove repository reference "hello-world:latest" (must force) - container 153999a1dfb2 is using its referenced image bf756fb1ae65
-$ sudo docker rmi -f hello-world:latest  # 强制删除镜像
-Untagged: hello-world:latest
-Untagged: hello-world@sha256:49a1c8800c94df04e9658809b006fd8a686cab8028d33cfba2cc049724254202
-Deleted: sha256:bf756fb1ae65adf866bd8c456593cd24beb6a0a061dedf42b26a993176745f6b
-
-$ sudo docker ps -a  # 课件，强制删除镜像后，原始关联的容器并不会被删除
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                   PORTS               NAMES
-153999a1dfb2        bf756fb1ae65            "/hello"            5 hours ago         Exited (0) 5 hours ago                       naughty_euler
-$ sudo docker images
-REPOSITORY                                             TAG                 IMAGE ID            CREATED             SIZE
-
-$ sudo docker load -i hello-world-latest.tar 
-Loaded image: hello-world:latest
-
-$ sudo docker images
-REPOSITORY                                             TAG                 IMAGE ID            CREATED             SIZE
-hello-world                                            latest              bf756fb1ae65        7 months ago        13.3kB
-$ sudo docker ps -a  # 可见，当重新加载对应的镜像时，这里的IMAGE又对应了回来
-CONTAINER ID        IMAGE                   COMMAND             CREATED             STATUS                   PORTS               NAMES
-153999a1dfb2        hello-world             "/hello"            5 hours ago         Exited (0) 5 hours ago                       naughty_euler
+docker run -v mydata:/data ubuntu
 ```
-这里也有个例子：
 
-docker 打包本地镜像，并到其他机器进行恢复：[https://blog.csdn.net/zf3419/article/details/88533274](https://blog.csdn.net/zf3419/article/details/88533274)
-参考资料
-docker命令行的基本指令都在这里：[https://docs.docker.com/engine/reference/commandline/docker/](https://docs.docker.com/engine/reference/commandline/docker/)
-官方给了一些指导性的文档：[https://docs.docker.com/develop/](https://docs.docker.com/develop/)
+- 查看卷
+
+```bash
+docker volume ls
+docker volume inspect mydata
+```
+
+- 删除卷
+
+```bash
+docker volume rm mydata
+```
+
+
+
+
+### 3.5 环境变量
+
+| 参数   | 说明     | 示例                              |
+| ---- | ------ | ------------------------------- |
+| `-e` | 设置环境变量 | `docker run -e ENV=prod ubuntu` |
+
+
+### 3.6 网络配置
+
+| 参数          | 说明        | 示例                                  |
+| ----------- | --------- | ----------------------------------- |
+| `--network` | 指定容器连接的网络 | `docker run --network mynet ubuntu` |
+
+可以通过 `docker network create` 创建自定义网络。
+
+
+### 3.7 自动重启策略（用于生产环境）
+
+| 参数                 | 说明        | 示例                                  |
+| ------------------ | --------- | ----------------------------------- |
+| `--restart=always` | 容器崩溃后自动重启 | `docker run --restart=always nginx` |
+
+可选值：
+
+* `no`（默认）
+* `on-failure`
+* `always`
+* `unless-stopped`
+
+
+### 3.8 完整示例：部署 Nginx 网站容器
+
+```bash
+docker run -d \
+  --name my-nginx \
+  -p 8080:80 \
+  -v /home/user/html:/usr/share/nginx/html \
+  --restart=always \
+  nginx
+```
+
+📝 含义：
+
+* 后台运行
+* 容器叫 `my-nginx`
+* 把本地 8080 映射到容器 80 端口
+* 将宿主机的 `/home/user/html` 作为网站根目录
+* 自动重启
+* 使用 nginx 镜像
+
+
+
+
+
+其实 `docker run` 等价于：
+
+```bash
+docker create ...   # 创建容器（不运行）
+docker start ...    # 启动容器
+```
+
+
+
+## 4. 容器相关命令
+
+
+### 4.1 容器生命周期管理（创建、启动、停止等）
+
+`docker run` 👉 **创建 + 启动容器**
+
+```bash
+docker run -it --name mycontainer ubuntu bash
+```
+
+* 创建容器并运行
+* 加 `-d` 就是后台运行
+
+ `docker start` 👉 启动 **已创建但未运行** 的容器
+
+```bash
+docker start mycontainer
+```
+
+
+ `docker stop` 👉 停止正在运行的容器
+
+```bash
+docker stop mycontainer
+```
+
+* 等应用正常关闭，最长 10 秒后强制停止
+
+
+`docker restart` 👉 重启容器
+
+```bash
+docker restart mycontainer
+```
+
+
+`docker pause / unpause` 👉 挂起 / 恢复容器进程
+
+```bash
+docker pause mycontainer
+docker unpause mycontainer
+```
+
+
+`docker kill` 👉 强制终止容器（立即发送 SIGKILL）
+
+```bash
+docker kill mycontainer
+```
+
+
+`docker rm` 👉 删除容器（必须先停止）
+
+```bash
+docker rm mycontainer
+docker rm -f mycontainer  # 强制删除
+```
+
+
+### 4.2 容器信息查看
+
+`docker ps` 👉 查看正在运行的容器
+
+```bash
+docker ps
+```
+
+`docker ps -a` 👉 查看所有容器（包括停止的）
+
+```bash
+docker ps -a
+```
+
+`docker inspect` 👉 查看容器详细信息（JSON）
+
+```bash
+docker inspect mycontainer
+```
+
+可查看：
+
+* 容器配置
+* 网络信息
+* 挂载卷
+* IP、环境变量等
+
+
+`docker stats` 👉 实时查看容器资源占用（CPU、内存、IO）
+
+```bash
+docker stats
+```
+
+
+`docker top` 👉 查看容器内的进程
+
+```bash
+docker top mycontainer
+```
+
+
+### 4.3 容器交互与文件管理
+
+`docker exec` 👉 在运行中的容器内执行命令
+
+```bash
+docker exec -it mycontainer bash
+```
+
+* 类似登录容器终端
+* 用于运行调试命令、查看日志、临时修改
+
+
+ `docker attach` 👉 连接容器主终端
+
+```bash
+docker attach mycontainer
+```
+
+📌 注意：
+
+* 是连接主进程（非新终端）
+* Ctrl+C 会停止容器
+
+
+`docker cp` 👉 容器与宿主机之间拷贝文件
+
+**从宿主机拷贝到容器**
+
+```bash
+docker cp ./config.json mycontainer:/app/config.json
+```
+
+**从容器拷贝到宿主机**
+
+```bash
+docker cp mycontainer:/app/log.txt ./log.txt
+```
+
+
+`docker logs` 👉 查看容器的标准输出日志
+
+```bash
+docker logs mycontainer
+docker logs -f mycontainer  # 实时查看（follow）
+```
+
+
+### 4.4 容器更新与修改
+
+`docker commit` 👉 把运行中的容器保存成镜像
+
+```bash
+docker commit mycontainer mynewimage:v1
+```
+
+
+### 4.5 容器清理
+
+删除所有停止的容器
+
+```bash
+docker container prune
+```
+
+ 删除所有容器（危险操作）
+
+```bash
+docker rm -f $(docker ps -aq)
+```
+
+---
+
+### 4.6 命令速查表
+
+| 类型    | 命令                       | 说明              |
+| ----- | ------------------------ | --------------- |
+| 创建并运行 | `docker run`             | 创建并启动一个新容器      |
+| 启动    | `docker start`           | 启动已存在容器         |
+| 停止    | `docker stop`            | 停止运行的容器         |
+| 强制停止  | `docker kill`            | 立即中止容器进程        |
+| 重启    | `docker restart`         | 停止+启动           |
+| 删除    | `docker rm`              | 删除容器            |
+| 查看    | `docker ps`              | 查看运行中容器         |
+| 查看全部  | `docker ps -a`           | 包括停止的容器         |
+| 查看详情  | `docker inspect`         | 容器配置与状态         |
+| 查看资源  | `docker stats`           | CPU、内存、I/O 实时监控 |
+| 查看进程  | `docker top`             | 容器内运行的进程        |
+| 登录容器  | `docker exec`            | 推荐（不会关闭主进程）     |
+| 附加终端  | `docker attach`          | 不推荐（Ctrl+C 会退出） |
+| 查看日志  | `docker logs`            | 标准输出内容          |
+| 文件复制  | `docker cp`              | 宿主机和容器间互拷       |
+| 生成镜像  | `docker commit`          | 把容器打包成镜像        |
+| 清理容器  | `docker container prune` | 删除全部已停止的容器      |
+
+---
+
+
+## 5. 使用 Dockerfile 构建镜像（推荐）
+
+> **标准做法，适用于开发部署环境、自定义服务镜像等**
+
+
+### 5.1 准备一个 Dockerfile（无扩展名）
+
+**示例**
+
+```dockerfile
+# Dockerfile
+FROM ubuntu:20.04                 # 基础镜像
+RUN apt update && apt install -y python3
+COPY . /app                       # 拷贝当前目录所有文件进镜像
+WORKDIR /app                     # 设置工作目录
+CMD ["python3", "main.py"]       # 容器启动时执行的命令
+```
+
+
+### 5.2 构建镜像
+
+```bash
+docker build -t my-python-app:v1 .
+```
+
+参数说明：
+
+* `-t my-python-app:v1`：给镜像命名并打标签
+* `.`：表示当前目录（Dockerfile 和代码所在目录）
+
+
+### 5.3 查看生成的镜像
+
+```bash
+docker images
+```
+
+你会看到如下类似输出：
+
+```
+REPOSITORY        TAG     IMAGE ID       CREATED          SIZE
+my-python-app     v1      abcd1234...    10 seconds ago   180MB
+```
+
+### 5.4 使用镜像运行容器
+
+```bash
+docker run -it my-python-app:v1
+```
+
+当然可以！我们来**系统详细地介绍** `docker save` 和 `docker load`，它们是用于 **镜像的导出与导入** 的命令，常用于：
+
+* 镜像备份（本地保存）
+* 离线环境部署（如无网络的服务器）
+* 镜像迁移（从一台机器移动到另一台）
+
+---
+
+## 🧊 `docker save` —— 导出镜像为 `.tar` 文件
+
+### 📌 作用：
+
+将一个或多个 Docker 镜像导出为 `.tar` 文件，**包含镜像的所有层和元数据**。
+
+### 📘 基本语法：
+
+```bash
+docker save -o <保存路径>.tar <镜像名>:<标签>
+```
+
+### ✅ 示例：
+
+```bash
+docker save -o nginx.tar nginx:latest
+```
+
+生成一个 `nginx.tar` 文件，可以复制、传输、存档。
+
+---
+
+## 6. 导出导入镜像
+
+
+从 `.tar` 文件中导入镜像到本地 Docker 镜像仓库。
+
+
+```bash
+docker load -i <路径>.tar
+```
+
+**demo**
+
+```bash
+docker load -i nginx.tar
+```
+
+输出如下，表示导入成功：
+
+```
+Loaded image: nginx:latest
+```
+
+现在像使用本地镜像一样运行它：
+
+```bash
+docker run -d -p 8080:80 nginx:latest
+```
+
+**示例完整流程：备份和迁移镜像**
+
+🟢 在源服务器上：
+
+```bash
+docker save -o myapp.tar myapp:1.0
+scp myapp.tar user@target-server:/home/user/
+```
+
+🔵 在目标服务器上：
+
+```bash
+docker load -i /home/user/myapp.tar
+docker run myapp:1.0
+```
+
+
+也可以导出多个镜像：
+
+```bash
+docker save -o all-in-one.tar nginx:latest redis:6.0
+```
+
+然后使用 `docker load -i all-in-one.tar` 一次导入所有。
+
+ ✅ 总结
+
+| 命令            | 作用                       | 常用场景         |
+| ------------- | ------------------------ | ------------ |
+| `docker save` | 导出镜像为 `.tar` 文件          | 镜像迁移、备份、离线部署 |
+| `docker load` | 从 `.tar` 文件加载镜像          | 离线导入镜像       |
+| 推荐使用          | 配合 `Dockerfile` 构建好镜像后导出 | 安全可靠、易维护     |
+
+
