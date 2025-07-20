@@ -69,7 +69,7 @@ nav:
       - C++/13-lambda.md
       - C++/question.md
       - C++/hdf5.md
-  - computer_network:
+  - 计算机网络:
     - computer_network/01-client_server.md
   - UAV:
     - UAV/01-elevation.md
