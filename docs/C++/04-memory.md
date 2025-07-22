@@ -66,6 +66,23 @@ free(p);  // 释放内存
 
 > ❗ **注意：`malloc` 不会调用构造函数，`free` 也不会调用析构函数，不推荐在 C++ 中用于对象分配。**
 
+对类对象的影响
+```cpp
+class Person {
+public:
+    Person() { std::cout << "构造\n"; }
+    ~Person() { std::cout << "析构\n"; }
+};
+
+// new/delete：构造 + 析构
+Person* p1 = new Person();  // 输出：构造
+delete p1;                  // 输出：析构
+
+// malloc/free：没有构造、没有析构
+Person* p2 = (Person*)malloc(sizeof(Person));  // 没有输出
+free(p2);                                      // 没有输出
+```
+
 ---
 
 ## 4. 堆内存管理注意事项
