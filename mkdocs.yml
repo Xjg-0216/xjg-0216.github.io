@@ -69,7 +69,7 @@ nav:
       - C++/13-lambda.md
       - C++/question.md
       - C++/hdf5.md
-  - computer_network:
+  - 计算机网络:
     - computer_network/01-client_server.md
   - UAV:
     - UAV/01-elevation.md
@@ -85,8 +85,11 @@ nav:
   - 其他:
     - Learn/index.md
   - deepLearning:
-    - deepLearning/transformer.md
-    - deepLearning/ViT.md
+    - deepLearning/01-transformer.md
+    - deepLearning/02-ViT.md
+    - deepLearning/03-bert.md
+    - deepLearning/04-mae.md
+    - deepLearning/05-gpt.md
     - deepLearning/triplet_loss.md
 
 # [UI]
