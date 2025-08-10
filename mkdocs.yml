@@ -67,6 +67,9 @@ nav:
       - C++/11-define.md
       - C++/12-multi_thread.md
       - C++/13-lambda.md
+      - C++/14-std_function.md
+      - C++/15-l_r_value.md
+      - C++/16-function_template.md
       - C++/question.md
       - C++/hdf5.md
   - 计算机网络:

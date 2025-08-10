@@ -174,7 +174,7 @@ int main()
 | `std::this_thread::yield()`       | 当前线程**主动让出 CPU 执行权** |
 | `std::this_thread::get_id()`      | 获取当前线程的 **唯一 ID**    |
 
-**sleep_for**
+##### 3.2.1 **sleep_for**
 ```cpp
 #include <iostream>
 #include <thread>
@@ -194,7 +194,7 @@ int main() {
 
 ```
 
-**获取线程ID**
+##### 3.2.2 **get_id**
 ```cpp
 #include <iostream>
 #include <thread>
@@ -213,7 +213,7 @@ int main() {
 
 ```
 
-**yield() 主动让出 CPU 时间片**
+##### 3.2.3 **yield**
 
 ```cpp
 #include <iostream>
@@ -233,9 +233,26 @@ int main() {
 }
 
 ```
-`sleep_for` 和 `sleep_until`依赖系统的计时精度。
-
 `yield()` 是一种优化建议，系统可能让当前线程暂停，也可能忽略（不是强制让出）
+
+##### 3.2.4 **sleep_util**
+
+```cpp
+#include <iostream>
+#include <thread>
+#include <chrono>
+
+int main() {
+    using namespace std::chrono;
+    auto target = steady_clock::now() + seconds(3); // 3 秒后的时刻
+    std::cout << "开始等待...\n";
+    std::this_thread::sleep_until(target);
+    std::cout << "时间到！\n";
+}
+
+```
+
+
 
 
 ## 4. 线程安全与同步
@@ -257,6 +274,43 @@ int main() {
 - 互斥锁：在某段代码执行前加锁（lock），执行完毕后解锁（unlock）。
 - 加锁成功的线程可以继续执行，其他线程会阻塞，直到该锁被释放。
 
+**加锁/解锁**：
+
+- `lock()`：当前线程尝试获得互斥量，若已经被其他线程锁住，则阻塞等待。
+
+- `unlock()`：释放锁，允许其他线程进入。
+
+```cpp
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+std::mutex mutex; //定义一个全局互斥量
+int counter = 0;
+
+void increate(){
+    for (int i =0; i <1000; ++i){
+        mtx.lock();
+        ++counter;
+        mtx.unlock();
+    }
+}
+
+int main(){
+    std::thread t1(increate);
+    std::thread t2(increate);
+    t1.join();
+    t2.join();
+    std::cout << "counter = " << counter << std::endl;
+}
+
+```
+由于加锁保护，counter的结果是2000，不会出现竞争导致的少加。
+
+### 4.3 std::lock_guard
+
+手动`lock()`/ `unlock()`容易忘记释放锁，c++推荐用RAII形式的`std::lock_guard`
+
 ```cpp
 #include <iostream>
 #include <thread>
@@ -270,7 +324,7 @@ void increase() {
         std::lock_guard<std::mutex> lock(mtx); // 自动加锁和解锁
         ++counter;
     }
-}
+}// 离开作用域自动解锁
 
 int main() {
     std::thread t1(increase);
@@ -283,10 +337,61 @@ int main() {
     return 0;
 }
 ```
+### 4.4 std::unique_lock
 
-`std::mutex mtx`：声明一个互斥锁。
+`std::unique_lock`会在构造时获取互斥锁，在析构时自动释放锁，确保不因异常或提前return忘记解锁；相比`std::lock_guard`，它的特点是可延迟加锁、可提前解锁，可重新加锁，可转移所有权。
 
-`std::lock_guard<std::mutex>`：RAII方式自动加锁和解锁，防止因异常等导致忘记解锁。
+```cpp
+#include <mutex>
+std::mutex m;
+
+{
+    std::unique_lock<std::mutex> lk(m); // 默认立即加锁
+} // 出作用域自动解锁
+```
+| 构造模式              | 说明                                                                        |
+| ----------------- | ------------------------------------------------------------------------- |
+| 默认构造（锁对象时立即 lock） | `std::unique_lock<std::mutex> lk(m);`                                     |
+| 延迟加锁              | `std::unique_lock<std::mutex> lk(m, std::defer_lock);`（不加锁，需要手动 `lock()`） |
+| 尝试加锁              | `std::unique_lock<std::mutex> lk(m, std::try_to_lock);`（非阻塞）              |
+| 已加锁               | `std::unique_lock<std::mutex> lk(m, std::adopt_lock);`（假设外部已经加锁）          |
+
+**延迟加锁**
+
+```cpp
+std::unique_lock<std::mutex> lk(m, std::defer_lock);
+// 做一些无关工作
+lk.lock();//需要时再加锁
+```
+
+**可提前解锁再加锁**
+
+```cpp
+std::unique_lock<std::mutex> lk(m);
+do_work();
+lk.unlock(); // 提前释放锁
+do_other_work();
+lk.lock(); // 重新加锁
+```
+
+**配合条件变量**
+
+`std::condition_variable`需要`std::unique_lock`而不是`lock_guard`， 因为它在`wait()`时会自动释放锁并在唤醒时重新加锁
+
+```cpp
+#include <condition_variable>
+
+std::mutex mtx;
+std::condition_variable cv;
+bool ready = false;
+
+void worker(){
+    std::unique_lock<std::mutex> lk(m);
+    cv.wait(lk, []{ return ready; }); // 等待直到ready 为true
+}
+
+```
+
 
 
 | 用法                 | 说明             |
@@ -294,10 +399,10 @@ int main() {
 | `mutex.lock()`     | 手动加锁（不推荐）      |
 | `mutex.unlock()`   | 手动解锁（不推荐）      |
 | `std::lock_guard`  | 推荐方式，自动加解锁     |
-| `std::unique_lock` | 更灵活，可延迟加锁、提前解锁 |
+| `std::unique_lock` | 更灵活，可延迟加锁、提前解锁，重复加锁 |
 | `std::try_lock`    | 非阻塞加锁，锁失败立即返回  |
 
-### 4.2 condition_variable
+### 4.5 condition_variable
 
 `std::condition_variable`允许一个线程在某个条件满足之前进入等待状态，而由另一个线程在条件满足时通知它继续执行。
 常用于 生产者-消费者模型、任务调度 等场景。
@@ -389,7 +494,7 @@ void consumer() {
 | 条件变量本身不保存状态                        | `notify_one()` 不会“记住”曾经调用过，如果此时没人等待，通知会丢失 |
 | 避免死锁                               | 修改条件时应先加锁，通知时应解锁或在锁内快速通知                  |
 
-### 4.3 std::atomic
+### 4.6 std::atomic
 在 C++ 中，`std::atomic` 是用于 **多线程编程** 中的一种类型，提供了**原子操作**支持，用于避免数据竞争（data race），实现线程安全的数据访问和修改
 
 
@@ -466,11 +571,103 @@ int main() {
 如果你频繁地创建和销毁线程，会带来性能开销，因此可以使用**线程池**（Thread Pool）：
 一般线程池都会有以下几个部分构成：
 
-线程池管理器（ThreadPoolManager）:用于创建并管理线程池，也就是线程池类
-工作线程（WorkThread）: 线程池中线程
-任务队列task: 用于存放没有处理的任务。提供一种缓冲机制。
-append：用于添加任务的接口
+**1. 任务队列**
+
+存放待执行的任务，一般用`std::queue`和`std::mutex`保护
+
+**2. 工作线程**
+worker threads, 线程池启动时创建的线程集合，循环从任务队列取任务执行
+
+**3. 同步机制**
+- `std::mutex` ： 保护任务队列读写安全
+- `std::condition_variable`：任务到来时通知线程执行
+
+**4. 关闭控制**
+
+线程池析构时需要关闭所有线程（设置停止标志，唤醒所有线程，join）
+
+**简易实现**
+```cpp
+#include <vector>
+#include <queue>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <future>
+#include <functional>
+#include <stdexcept>
+
+
+class ThreadPool{
+
+public:
+    explicit ThreadPool(size_t threads):stop(false){
+        for (size_t i = 0; i < threads; ++i){
+            workers.emplace_back([this]{
+                for (;;){
+                    std::function<void()> task;
+                    {
+                        std:unique_lock<std::mutex> lock(this->queue_mutex);
+                        this->condition.wait(lock, [this]{
+                            return this->stop || !this->tasks.empty();
+                        });
+                        if (this->stop && this->tasks.empty()){
+                            return; // 线程退出条件
+                        }
+                        task = std::move(this->tasks.front());
+                        this->tasks.pop();
+                    }
+                    task();
+                }
+            });
+        }
+    }
+    // 加任务
+    template<class F, class... Args>
+    auto enqueue(F&&f, Args&&... args)
+        -> std::future<typename std::result_of<F(Args...)>::type>
+    {
+        // 把函数和参数绑定成一个 nullary callable
+        // 使用 std::bind 会把参数拷贝/移动到内部存储
+        typedef typename std::result_of<F(Args...)>::type return_type;
+        auto task = std::make_shared<std::packaged_task<return_type()>>(
+            std::bind(std::forward<F>(f), std::forward<Args>(args)...)
+        );
+
+        std::future<return_type> res = task->get_future();
+        {
+            std::unique_lock<std::mutex> lock(queue_mutex);
+            if (stop)
+                throw std::runtime_error("enqueue on stopped ThreadPool");
+            tasks.emplace([task](){(*task)();});
+        }
+        condition.notify_one();
+        return res;
+    }
+
+    ~ThreadPool(){
+        {
+            std::unique_lock<std::mutex> lock(queue_mutex);
+            if (stop) return; // 已经关闭
+            stop = true;
+        }
+        condition.notify_all();
+        for (std::thread &worker : workers) {
+            if (worker.joinable())
+                worker.join();
+        }
+    }
+
+private:
+    std::vector<std::thread> workers; // 线程容器，存储线程池中的线程对象， 线程池里有多少线程
+    std::queue<std::function<void()>> tasks; // 任务队列，存放待执行任务，存放由用户提交的任务， 用std::function<void()>包装
+
+    std::mutex queue_mutex; // 保护任务队列的互斥锁
+    std::condition_variable condition; // 条件队列，用于线程等待/ 唤醒
+    bool stop; // 标志，线程池是否停止运行
+
+};
 
 
 
-
+```
