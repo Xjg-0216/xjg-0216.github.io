@@ -26,6 +26,8 @@ nav:
       - TOOL/rk3588.md
     - 共享热点:
       - TOOL/network.md
+    - 算法：
+      - Algorithm/01-kalman.md  
   - 图像处理:
     - ISP:
       - IMAGE_PROCESS/isp/isp_pipeline.md
