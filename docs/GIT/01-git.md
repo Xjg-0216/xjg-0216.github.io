@@ -108,7 +108,7 @@
 5. **撤销更改** 撤销暂存区和工作区的更改：
     
     ```bash
-    git store # 修改了工作区，但还没有添加到暂存区（使用 `git add`），你可以使用 `git restore` 来恢复文件到最近一次提交的状态
+    git restore # 修改了工作区，但还没有添加到暂存区（使用 `git add`），你可以使用 `git restore` 来恢复文件到最近一次提交的状态
     git reset # 撤销最近一次提交，丢弃暂存区的修改，保留在工作区
     git reset --soft HEAD~1 # 撤销最近一次提交，但保留修改在暂存区和工作区
     git reset --mixed HEAD~1 # 撤销最近一次提交，丢弃暂存区的修改，保留在工作区
@@ -121,12 +121,33 @@
 	git push origin <branch_name> --force   # 强制推送到远程仓库,强制推送（`--force`）会覆盖远程仓库的历史
     ```
     
-1. **删除文件** 删除文件并提交删除操作：
+7. **删除文件** 删除文件并提交删除操作：
     
     ```bash
     git rm <file_name>
     git commit -m "Remove file"
     ```
+8. **合并commit**
+
+    合并到上一个commit信息
+    ```bash
+    git add .
+    git commit --amend
+    ```
+
+
+    合并最近的两个/多个 commit
+    ```bash
+    git rebase -i HEAD~2
+    git rebase -i HEAD~n
+    ```
+    操作步骤：
+    执行命令后会打开编辑器
+    将第二个 commit 前的 pick改为 squash或 s
+    保存并关闭编辑器
+    在新的编辑器中编辑合并后的 commit 信息
+    保存完成合并
+    
     
 
 ## 6. 分支管理
