@@ -26,6 +26,8 @@ nav:
       - TOOL/rk3588.md
     - 共享热点:
       - TOOL/network.md
+    - vscode远程免密连接:
+      - TOOL/vscode-remote-auto-conn.md
   - 算法:
     - Algorithm/01-kalman.md  
   - 图像处理:
