@@ -48,6 +48,7 @@ nav:
     - LLM/01-模型文件格式以及框架.md
     - LLM/02-ollama使用.md
     - LLM/03-DDPM.md
+    - LLM/04-bigram_language_model.md
   - C++:
     - tool:
       - C++/vscode/00-make.md 
