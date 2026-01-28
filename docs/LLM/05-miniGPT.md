@@ -1,4 +1,4 @@
-# gpt
+# miniGPT
 
 >来自karpathy Lets build GPT_ from scratch, in code, spelled out课程，训练字符级gpt,部分步骤与bigram相同
 

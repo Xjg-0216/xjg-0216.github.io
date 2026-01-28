@@ -49,7 +49,9 @@ nav:
     - LLM/02-ollama使用.md
     - LLM/03-DDPM.md
     - LLM/04-bigram_language_model.md
-    - LLM/05-gpt_Karpathy.md
+    - LLM/05-miniGPT.md
+    - LLM/06-nanoGPT.md
+    - LLM/07-mfu.md
   - C++:
     - tool:
       - C++/vscode/00-make.md 
