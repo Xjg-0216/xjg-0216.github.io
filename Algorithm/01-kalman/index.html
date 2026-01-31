@@ -1,0 +1,4967 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="XUJG Site">
+      
+      
+        <meta name="author" content="xujg">
+      
+      
+        <link rel="canonical" href="https://xjg-0216.github.io/Algorithm/01-kalman/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>卡尔曼滤波 - XUJG Site</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.css">
+    
+      <link rel="stylesheet" href="../../mkdocs/css/no-footer.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="XUJG Site" class="md-header__button md-logo" aria-label="XUJG Site" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            XUJG Site
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              卡尔曼滤波
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="orange"  aria-label="切换至夜间模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换至夜间模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="orange"  aria-label="切换至日间模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换至日间模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Xjg-0216/xjg-0216.github.io" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    xjg-0216.github.io
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../GIT/01-git/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  GIT
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../TOOL/docker/01-docker-install/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  工具
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../IMAGE_PROCESS/isp/isp_pipeline/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  图像处理
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../LLM/00-LLM%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  LLM
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../C%2B%2B/vscode/00-make/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  C++
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../UAV/01-elevation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  UAV
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../deploy/01-rknn/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  模型部署
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../Learn/index.md" class="md-tabs__link">
+          
+  
+  
+    
+  
+  其他
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../deepLearning/01-transformer/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  deepLearning
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="XUJG Site" class="md-nav__button md-logo" aria-label="XUJG Site" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    XUJG Site
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Xjg-0216/xjg-0216.github.io" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    xjg-0216.github.io
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIT
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GIT
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GIT/01-git/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git 基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../GIT/02-git_lfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git LFS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    工具
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    工具
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    docker
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    docker
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/docker/01-docker-install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    docker安装
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/docker/02-docker-commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    docker基本命令
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ubuntu
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ubuntu
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/ubuntu/01-timeshift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    系统备份
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/ubuntu/02-apt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    apt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/ubuntu/04-byobu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    byobu
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/ubuntu/05-mount/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    挂载硬盘
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/ubuntu/06-tar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    tar/zip
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/ubuntu/07-faiss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    faiss-c 安装
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/ubuntu/08-scp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    远程文件传输
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    conda
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    conda
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/conda/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conda
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RK3588
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RK3588
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/rk3588/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RK3588烧录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    共享热点
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    共享热点
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/network/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ubuntu搭建共享网络
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vscode远程免密连接
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    vscode远程免密连接
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../TOOL/vscode-remote-auto-conn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vscode远程免密连接
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    图像处理
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    图像处理
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ISP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ISP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMAGE_PROCESS/isp/isp_pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ISP Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    opencv
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    opencv
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMAGE_PROCESS/opencv/01-mat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    cv::Mat 容器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ByteTrack
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ByteTrack
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMAGE_PROCESS/bytetrack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ByteTrack跟踪算法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NetVLAD
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    NetVLAD
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMAGE_PROCESS/NetVLAD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NetVLAD向量聚合
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMAGE_PROCESS/01-img0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    成像基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMAGE_PROCESS/02-OpenDroneMap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    无人机定位数据集制作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMAGE_PROCESS/03-reprojection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    透射变换与重投影
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../IMAGE_PROCESS/04-ord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    倾斜图像变换正射图像
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LLM
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LLM/00-LLM%E5%AD%A6%E4%B9%A0%E8%B7%AF%E7%BA%BF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM学习路线
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LLM/02-ollama%E4%BD%BF%E7%94%A8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ollama 使用
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LLM/03-DDPM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    扩散模型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LLM/04-bigram_language_model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    bigram language model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LLM/05-miniGPT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    miniGPT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LLM/06-nanoGPT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    nanogpt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LLM/07-mfu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MFU
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C++
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    tool
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    tool
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/00-make/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    零 CMake&amp;make&amp;Makefile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/01-g%2B%2B/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    一 Linux中编译C++
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/02-compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    二 Linux C++命令行编译
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/03-dbg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    三 GDB调试器
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/04-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    四 Linux C++命令行调试
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/05-cmake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    五 CMake的语法特性与常用变量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/06-cmake-compile-step/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    六 CMake编译流程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/07-cmake-compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    七 CMake项目编译实战
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/08-vscode-debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    八 VSCode中调试C++程序
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/vscode/a1-vscode-compile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    九 附录
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    语法
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    语法
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/01-class1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    一 类-封装
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/02-class2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    二 类-继承
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/03-class3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    三 类-多态
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/00-stl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    模板
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/04-memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    四 内存分配与释放
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/05-argv/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    五 命令行参数
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/06-char/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    六 char 和 string
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/07-const/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    七 const
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/08-point_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    八 指针与引用
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/09-type_modify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    九 类型修饰符
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/10-type_convert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    十 类型转换
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/11-define/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    十一 预处理器与宏定义
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/12-multi_thread/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    十二 多线程与线程池
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/13-lambda/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    lambda函数
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/14-std_function/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    std::function&lt;void()&gt;
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/15-l_r_value/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    左值和右值
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/16-function_template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    函数模板
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/question/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    c++常见问题
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../C%2B%2B/hdf5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HDF5
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UAV
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UAV
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UAV/01-elevation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数字高程模型(DEM)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UAV/02-Flight_attitude/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    飞行姿态
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UAV/03-livox_ros_driver/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ROS环境接收和处理Livox激光雷达数据
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UAV/04-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    无人机系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    模型部署
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    模型部署
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deploy/01-rknn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RKNN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    其他
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    其他
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Learn/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    None
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    deepLearning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    deepLearning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deepLearning/01-transformer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    transformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deepLearning/02-ViT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ViT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deepLearning/03-bert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 bert
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deepLearning/04-mae/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 mae
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deepLearning/05-gpt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 gpt
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../deepLearning/triplet_loss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    triplet loss
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 基本思想
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 数学模型
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 两个主要步骤
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 两个主要步骤">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (1) 预测步骤
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (2) 更新步骤
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 特点
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. C++ 中常见的卡尔曼滤波实现
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. C++ 中常见的卡尔曼滤波实现">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 常见状态/观测定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 核心矩阵：状态转移矩阵 A（匀速模型）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-h" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 观测矩阵 H（把状态投影到测量）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-init-initiate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4. 初始化（init / initiate）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-predict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 预测（predict）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-project-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 投影与更新（project + update）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-gatingmahalanobis-distance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 门控（Gating）与马氏距离（Mahalanobis distance）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-multi_predict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 批量预测（multi_predict）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-strack-bytetrack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 在 STrack / ByteTrack 的使用位置（结合跟踪流程）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 典型 C++ 代码片段
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6 典型 C++ 代码片段">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-chi2inv95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 chi2inv95
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-kalmanfilterkalmanfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 构造函数 KalmanFilter::KalmanFilter()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-initiateconst-detectbox-measurement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 initiate(const DETECTBOX &amp;measurement) —— 初始化新轨迹
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-predictkal_mean-mean-kal_cova-covariance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 predict(KAL_MEAN &amp;mean, KAL_COVA &amp;covariance) —— 预测步骤
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-projectconst-kal_mean-mean-const-kal_cova-covariance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 project(const KAL_MEAN &amp;mean, const KAL_COVA &amp;covariance) —— 将状态投影到观测空间
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6 update(...) —— 用观测修正预测
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67-gating_distance-gating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7 gating_distance(...) —— 计算（批量）马氏距离，用于关联 gating
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8 参数含义与常数解释（为什么这么设）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#69" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.9 常见改进建议（代码/数值稳定/性能）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#610" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.10. 小示例：数值化走一遍（便于理解）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/Xjg-0216/xjg-0216.github.io/edit/main/docs/Algorithm/01-kalman.md" title="编辑此页" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="_1">卡尔曼滤波<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>卡尔曼滤波（Kalman Filter, KF）是一种<strong>递归的最优估计方法</strong>，常用于在有噪声的情况下，对动态系统的状态（位置、速度、姿态等）进行估计和预测。它广泛应用在<strong>导航、信号处理、目标跟踪、机器人定位</strong>等领域。</p>
+<h2 id="1">1. 基本思想<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>系统的真实状态（例如目标位置和速度）无法直接精确观测，只能通过含噪声的观测值来获取。
+卡尔曼滤波通过：</p>
+<ul>
+<li><strong>预测 (Predict)</strong>：根据运动模型，利用上一次状态估计预测当前状态；</li>
+<li><strong>更新 (Update)</strong>：结合当前观测值修正预测结果。</li>
+</ul>
+<p>这样，就能在“模型预测”和“测量修正”之间取得平衡，从而得到比单独依赖模型或观测更准确的估计。</p>
+<hr />
+<h2 id="2">2. 数学模型<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>卡尔曼滤波适用于 <strong>线性、高斯噪声</strong> 的情况。</p>
+<ul>
+<li><strong>状态转移方程</strong>（系统模型）：</li>
+</ul>
+<div class="arithmatex">\[
+x_k = A x_{k-1} + B u_k + w_k
+\]</div>
+<p>其中：</p>
+<ul>
+<li>
+<p><span class="arithmatex">\(x_k\)</span>：系统在时刻 <span class="arithmatex">\(k\)</span> 的状态向量（如位置、速度）</p>
+</li>
+<li>
+<p><span class="arithmatex">\(A\)</span>：状态转移矩阵（描述系统的运动模型）</p>
+</li>
+<li>
+<p><span class="arithmatex">\(B\)</span>：控制输入矩阵</p>
+</li>
+<li>
+<p><span class="arithmatex">\(u_k\)</span>：控制量（如加速度、转向）</p>
+</li>
+<li>
+<p><span class="arithmatex">\(w_k\)</span>：过程噪声，服从高斯分布 <span class="arithmatex">\(N(0,Q)\)</span></p>
+</li>
+<li>
+<p><strong>观测方程</strong>（测量模型）：</p>
+</li>
+</ul>
+<div class="arithmatex">\[
+z_k = H x_k + v_k
+\]</div>
+<p>其中：</p>
+<ul>
+<li><span class="arithmatex">\(z_k\)</span>：观测量（雷达测到的位置、传感器读数）</li>
+<li><span class="arithmatex">\(H\)</span>：观测矩阵（状态与观测的关系）</li>
+<li><span class="arithmatex">\(v_k\)</span>：观测噪声，服从高斯分布 <span class="arithmatex">\(N(0,R)\)</span></li>
+</ul>
+<hr />
+<h2 id="3">3. 两个主要步骤<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<h3 id="1_1">(1) 预测步骤<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h3>
+<div class="arithmatex">\[
+\hat{x}_k^- = A \hat{x}_{k-1} + B u_k
+\]</div>
+<div class="arithmatex">\[
+P_k^- = A P_{k-1} A^T + Q
+\]</div>
+<ul>
+<li><span class="arithmatex">\(\hat{x}_k^-\)</span>：预测状态</li>
+<li><span class="arithmatex">\(P_k^-\)</span>：预测协方差（不确定性）</li>
+</ul>
+<h3 id="2_1">(2) 更新步骤<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
+<p>计算卡尔曼增益：</p>
+<div class="arithmatex">\[
+K_k = P_k^- H^T (H P_k^- H^T + R)^{-1}
+\]</div>
+<p>更新状态：</p>
+<div class="arithmatex">\[
+\hat{x}_k = \hat{x}_k^- + K_k (z_k - H \hat{x}_k^-)
+\]</div>
+<p>更新协方差：</p>
+<div class="arithmatex">\[
+P_k = (I - K_k H) P_k^-
+\]</div>
+<p>这里的 <strong>卡尔曼增益 <span class="arithmatex">\(K_k\)</span></strong> 决定了预测和观测的权重分配：</p>
+<ul>
+<li>若观测噪声大（R 大），则更多依赖预测；</li>
+<li>若模型不确定（Q 大），则更多依赖观测。</li>
+</ul>
+<hr />
+<h2 id="4">4. 特点<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>优点</strong>：</p>
+</li>
+<li>
+<p>计算效率高，递归形式适合实时应用；</p>
+</li>
+<li>在高斯噪声和线性系统下是最优估计器。</li>
+<li>
+<p><strong>缺点</strong>：</p>
+</li>
+<li>
+<p>假设系统是线性的、噪声是高斯分布；</p>
+</li>
+<li>对非线性系统需使用 <strong>扩展卡尔曼滤波 (EKF)</strong> 或 <strong>无迹卡尔曼滤波 (UKF)</strong>。</li>
+</ul>
+<h2 id="5-c">5. C++ 中常见的卡尔曼滤波实现<a class="headerlink" href="#5-c" title="Permanent link">&para;</a></h2>
+<h3 id="51">5.1 常见状态/观测定义<a class="headerlink" href="#51" title="Permanent link">&para;</a></h3>
+<p>常用的状态向量（8 维）：</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Text Only</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1">x = [x_c, y_c, a, h, vx, vy, va, vh]^T
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><code>x_c,y_c</code>：bbox 中心坐标</li>
+<li><code>a</code>：宽高比 (w/h) 或宽高比的某种表征（各实现细节略有差异）</li>
+<li><code>h</code>：bbox 高度（或 h）</li>
+<li><code>vx,vy,va,vh</code>：对应的速度分量（状态向量后半段）</li>
+</ul>
+<p>观测向量 <code>z</code> 通常是 4 维：</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Text Only</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1">z = [x_c, y_c, a, h]^T
+</span></code></pre></div></td></tr></table></div>
+<p>维度说明：</p>
+<ul>
+<li>状态 <code>x</code> 是 8×1 向量</li>
+<li>状态协方差 <code>P</code> 是 8×8 矩阵</li>
+<li>观测矩阵 <code>H</code> 是 4×8（把状态投影到观测空间）</li>
+<li>观测协方差 <code>R</code> 是 4×4</li>
+<li>过程噪声协方差 <code>Q</code> 是 8×8</li>
+</ul>
+<h3 id="52-a">5.2 核心矩阵：状态转移矩阵 A（匀速模型）<a class="headerlink" href="#52-a" title="Permanent link">&para;</a></h3>
+<p>典型的 <code>A</code>（8×8）用于“位置 += 速度”模型（离散时间步长假定为 1）：</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Text Only</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1">A = [ I4  I4
+</span><span id="__span-2-2">      0   I4 ]
+</span></code></pre></div></td></tr></table></div>
+<p>更明确地（块矩阵）：</p>
+<ul>
+<li>左上 4×4：单位（位置由位置保留）</li>
+<li>左下 4×4：全 0（速度不影响之前的速度）</li>
+<li>右上 4×4：单位（位置 += 速度）</li>
+<li>右下 4×4：单位（速度保持不变）</li>
+</ul>
+<p>数学上，预测步骤等价于：</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Text Only</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1">x^- = A x
+</span><span id="__span-3-2">P^- = A P A^T + Q
+</span></code></pre></div></td></tr></table></div>
+<p>实现注意：</p>
+<ul>
+<li>有些实现把位置和速度顺序颠倒，注意和代码里的索引对齐。</li>
+<li>如果帧间时间 dt ≠ 1，需要把速度项乘以 dt。</li>
+</ul>
+<h3 id="53-h">5.3 观测矩阵 H（把状态投影到测量）<a class="headerlink" href="#53-h" title="Permanent link">&para;</a></h3>
+<p><code>H</code> 是 4×8，常为：</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Text Only</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1">H = [ I4  0 ]
+</span></code></pre></div></td></tr></table></div>
+<p>也就是取状态的前 4 个分量作为观测预测：<code>z^- = H x^- = [x_c, y_c, a, h]</code></p>
+<hr />
+<h3 id="54-init-initiate">5.4. 初始化（init / initiate）<a class="headerlink" href="#54-init-initiate" title="Permanent link">&para;</a></h3>
+<p>当检测器在新目标上生成第一次检测时，会调用 <code>init</code>：</p>
+<p>实现步骤：</p>
+<ol>
+<li>用检测框（<code>z</code>）构造初始状态 <code>x</code>：把位置部分设为 <code>z</code>，速度部分设为 0（或者小值）。</li>
+<li>初始化 <code>P</code>：通常对位置维度赋较小方差（例如 <code>10</code> 或 <code>1e-2</code>），对速度维度赋较大方差（例如 <code>1e3</code>）表示对速度不确定。</li>
+</ol>
+<p>代码示例（伪）：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-5-1"><span class="n">Vector8</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+</span><span id="__span-5-2"><span class="n">x</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z</span><span class="p">;</span><span class="w">         </span><span class="c1">// z is 4x1</span>
+</span><span id="__span-5-3"><span class="n">x</span><span class="p">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="n">setZero</span><span class="p">();</span><span class="w">   </span><span class="c1">// initial velocity unknown</span>
+</span><span id="__span-5-4">
+</span><span id="__span-5-5"><span class="n">Matrix8</span><span class="w"> </span><span class="n">P</span><span class="p">;</span>
+</span><span id="__span-5-6"><span class="n">P</span><span class="p">.</span><span class="n">setZero</span><span class="p">();</span>
+</span><span id="__span-5-7"><span class="n">P</span><span class="p">.</span><span class="n">block</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pos_var</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">I4</span><span class="p">;</span><span class="w">    </span><span class="c1">// position variance</span>
+</span><span id="__span-5-8"><span class="n">P</span><span class="p">.</span><span class="n">block</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vel_var</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">I4</span><span class="p">;</span><span class="w">    </span><span class="c1">// velocity variance</span>
+</span></code></pre></div></td></tr></table></div>
+<h3 id="55-predict">5.5 预测（predict）<a class="headerlink" href="#55-predict" title="Permanent link">&para;</a></h3>
+<p>典型实现（伪）：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-6-1"><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+</span><span id="__span-6-2"><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">transpose</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Q</span><span class="p">;</span>
+</span></code></pre></div></td></tr></table></div>
+<p>说明：</p>
+<ul>
+<li><code>Q</code>（过程噪声）常选为对角矩阵。其数值决定模型对“加速度/模型误差”的容忍度：<code>Q</code> 大 → 预测更“发散”、更信任观测。</li>
+<li>有些实现把 <code>Q</code> 设计为与目标尺度（h）有关，使得大目标的过程噪声比例不同。</li>
+</ul>
+<h3 id="56-project-update">5.6 投影与更新（project + update）<a class="headerlink" href="#56-project-update" title="Permanent link">&para;</a></h3>
+<p>先将预测的状态投影到观测空间：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-1"><span class="n">z_pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w">            </span><span class="c1">// 4x1</span>
+</span><span id="__span-7-2"><span class="n">S</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">transpose</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">R</span><span class="p">;</span><span class="w">  </span><span class="c1">// 4x4, 观测协方差</span>
+</span><span id="__span-7-3"><span class="n">K</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">transpose</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">S</span><span class="p">.</span><span class="n">inverse</span><span class="p">();</span><span class="w"> </span><span class="c1">// 8x4 卡尔曼增益</span>
+</span></code></pre></div></td></tr></table></div>
+<p>随后用观测 <code>z</code> 更新：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-8-1"><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">z</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">z_pred</span><span class="p">);</span>
+</span><span id="__span-8-2"><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">I</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">H</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">P</span><span class="p">;</span><span class="w"> </span><span class="c1">// 标准形式</span>
+</span></code></pre></div></td></tr></table></div>
+<p>实现细节：</p>
+<ul>
+<li>为数值稳定，有时采用 Joseph form 更新协方差：</li>
+</ul>
+<p><div class="language-text highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Text Only</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-9-1">P = (I - K H) P (I - K H)^T + K R K^T
+</span></code></pre></div></td></tr></table></div>
+* <code>S</code> 的逆或 Cholesky 分解需要数值稳定性处理（避免非正定）。实际中用 <code>LDLT</code> 或 <code>LLT</code> 更稳定。</p>
+<hr />
+<h3 id="57-gatingmahalanobis-distance">5.7 门控（Gating）与马氏距离（Mahalanobis distance）<a class="headerlink" href="#57-gatingmahalanobis-distance" title="Permanent link">&para;</a></h3>
+<p>更新前常需要判断检测与预测的“距离”是否合理（用于关联、滤掉异常匹配）。常用两种距离：</p>
+<ul>
+<li>IoU（基于 bbox 的重叠）</li>
+<li>马氏距离（考虑预测协方差）：</li>
+</ul>
+<p>马氏距离计算（预测投影到观测空间）：</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Text Only</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-10-1">d^2 = (z - z_pred)^T * S^{-1} * (z - z_pred)
+</span></code></pre></div></td></tr></table></div>
+<p>如果 <code>d^2</code> 超过 <code>chi2</code> 阈值（自由度 = 4，对应置信度比如 0.995），则认为该检测与该轨迹不相容（用于匈牙利前做 gating）。</p>
+<p>实现要点：</p>
+<ul>
+<li><code>S</code> 是 4×4，不同目标/尺度 <code>S</code> 会不同，马氏距离自适应尺度，很适合多尺度目标。</li>
+<li>常在 <code>KalmanFilter::gating_distance()</code> 或 <code>KalmanFilter::distance()</code> 等函数中实现。</li>
+</ul>
+<hr />
+<h3 id="58-multi_predict">5.8 批量预测（multi_predict）<a class="headerlink" href="#58-multi_predict" title="Permanent link">&para;</a></h3>
+<p>为性能考虑，ByteTrack 往往会对所有活跃轨迹做一次批量预测（一次矩阵乘法循环），然后在匹配之前把所有 <code>x_pred</code> 投影出来以供计算 cost matrix（IoU 或 Mahalanobis）。伪代码：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-11-1"><span class="k">for</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="n">track</span><span class="o">:</span>
+</span><span id="__span-11-2"><span class="w">  </span><span class="n">x_pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x_old</span>
+</span><span id="__span-11-3"><span class="w">  </span><span class="n">P_pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">P_old</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">A</span><span class="o">^</span><span class="n">T</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Q</span>
+</span><span id="__span-11-4"><span class="w">  </span><span class="n">z_pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x_pred</span>
+</span><span id="__span-11-5"><span class="w">  </span><span class="n">S</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">P_pred</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">H</span><span class="o">^</span><span class="n">T</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">R</span>
+</span></code></pre></div></td></tr></table></div>
+<h3 id="59-strack-bytetrack">5.9 在 STrack / ByteTrack 的使用位置（结合跟踪流程）<a class="headerlink" href="#59-strack-bytetrack" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>创建轨迹</strong>：检测器的某个未匹配检测会 <code>initiate()</code> 一个新的轨迹（调用 Kalman <code>init</code>）。</li>
+<li><strong>预测</strong>：每帧开始会对所有活跃轨迹 <code>predict()</code>（得到 <code>x^-</code> 与 <code>P^-</code>）。</li>
+<li><strong>计算 cost matrix</strong>：用预测值和检测框计算 IoU/马氏距离矩阵（用于匈牙利匹配）。常用混合策略：优先用「检测置信度高的」与预测匹配（ByteTrack 的 trick），并把低置信检测当作补充。</li>
+<li><strong>更新</strong>：对匹配到检测的轨迹 <code>update()</code>。</li>
+<li><strong>管理生命周期</strong>：连续 <code>n</code> 帧丢失后删除轨迹或标记为 lost。</li>
+</ul>
+<h2 id="6-c">6 典型 C++ 代码片段<a class="headerlink" href="#6-c" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>DETECTBOX</code>：4 元素的检测向量，格式通常是 <code>[x_c, y_c, a, h]</code>（中心 x, 中心 y, 宽高比, 高度），形状可视为 <code>1×4</code>（或 <code>4×1</code>，见下面讨论）。</li>
+<li><code>KAL_MEAN</code>：状态向量（8 维），对应 <code>[x_c,y_c,a,h,vx,vy,va,vh]</code>，长度 8。</li>
+<li><code>KAL_COVA</code>：状态协方差矩阵，<code>8×8</code>。</li>
+<li><code>KAL_HMEAN</code>/<code>KAL_HCOVA</code>：观测空间的 mean（4）和协方差 <code>4×4</code>。</li>
+<li><code>DETECTBOXSS</code>：<code>N×4</code> 的矩阵（多条检测差值矩阵）。</li>
+</ul>
+<blockquote>
+<p>注意：源码里你有大量 <code>transpose()</code> 与 <code>block&lt;1,4&gt;</code> 的混用，表明实现上状态可能是以<strong>行向量（1×8）</strong>为主（而不是更常见的列向量 8×1）。下面解释时我既会按“数学上更标准”的列向量写法给出公式，也会指出源码中对应的维度/转置位置，帮助你一一对应。</p>
+</blockquote>
+<hr />
+<h3 id="61-chi2inv95">6.1 <code>chi2inv95</code><a class="headerlink" href="#61-chi2inv95" title="Permanent link">&para;</a></h3>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-12-1"><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">KalmanFilter</span><span class="o">::</span><span class="n">chi2inv95</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.8415</span><span class="p">,</span><span class="w"> </span><span class="mf">5.9915</span><span class="p">,</span><span class="w"> </span><span class="mf">7.8147</span><span class="p">,</span><span class="w"> </span><span class="mf">9.4877</span><span class="p">,</span><span class="w"> </span><span class="mf">11.070</span><span class="p">,</span><span class="w"> </span><span class="mf">12.592</span><span class="p">,</span><span class="w"> </span><span class="mf">14.067</span><span class="p">,</span><span class="w"> </span><span class="mf">15.507</span><span class="p">,</span><span class="w"> </span><span class="mf">16.919</span><span class="w"> </span><span class="p">};</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>这是卡方分布在 95% 置信度下不同自由度（degree-of-freedom）的临界值表：<code>chi2inv95[d]</code> 给出 <code>d</code> 自由度的临界值（例如 <code>d=4</code> 时约 <code>9.4877</code>）。</li>
+<li>在 gating（门控）时常用来判断马氏距离是否在接受范围内（如果 <code>maha^2 &gt; chi2inv95[d]</code> 则拒绝匹配）。</li>
+</ul>
+<h3 id="62-kalmanfilterkalmanfilter">6.2 构造函数 <code>KalmanFilter::KalmanFilter()</code><a class="headerlink" href="#62-kalmanfilterkalmanfilter" title="Permanent link">&para;</a></h3>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-13-1"><span class="kt">int</span><span class="w"> </span><span class="n">ndim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+</span><span id="__span-13-2"><span class="kt">double</span><span class="w"> </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="p">;</span>
+</span><span id="__span-13-3">
+</span><span id="__span-13-4"><span class="n">_motion_mat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">MatrixXf</span><span class="o">::</span><span class="n">Identity</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+</span><span id="__span-13-5"><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ndim</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-6"><span class="w">    </span><span class="n">_motion_mat</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">ndim</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dt</span><span class="p">;</span>
+</span><span id="__span-13-7"><span class="p">}</span>
+</span><span id="__span-13-8"><span class="n">_update_mat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Eigen</span><span class="o">::</span><span class="n">MatrixXf</span><span class="o">::</span><span class="n">Identity</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+</span><span id="__span-13-9">
+</span><span id="__span-13-10"><span class="k">this</span><span class="o">-&gt;</span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+</span><span id="__span-13-11"><span class="k">this</span><span class="o">-&gt;</span><span class="n">_std_weight_velocity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">160</span><span class="p">;</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><code>ndim = 4</code>：状态中“可观测的”部分长度（<code>x_c,y_c,a,h</code>），总状态维度 8（含速度分量）。</li>
+<li><code>_motion_mat</code>：这是状态转移矩阵 <code>A</code>（8×8），按匀速模型构造（離散時間 <code>dt</code> = 1）。数学上对应：</li>
+</ul>
+<p>$$
+  A =
+  \begin{bmatrix}
+  I_4 &amp; I_4\
+  0   &amp; I_4
+  \end{bmatrix}
+  $$</p>
+<p>即位置部分 <code>pos' = pos + vel * dt</code>，速度保持不变。
+* <code>_update_mat</code>：观测矩阵 <code>H</code>，<code>4×8</code>，通常是 <code>[I4  0]</code> —— 把状态的前 4 个量映射为观测空间。
+* <code>_std_weight_position</code> / <code>_std_weight_velocity</code>：权重常量，用来把尺度（通常用 <code>h</code>）转成噪声标准差（std）。采用相对尺度而非绝对像素值，能让噪声随目标大小调整。</p>
+<h3 id="63-initiateconst-detectbox-measurement">6.3 <code>initiate(const DETECTBOX &amp;measurement)</code> —— 初始化新轨迹<a class="headerlink" href="#63-initiateconst-detectbox-measurement" title="Permanent link">&para;</a></h3>
+<p>关键代码：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-14-1"><span class="n">DETECTBOX</span><span class="w"> </span><span class="n">mean_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">measurement</span><span class="p">;</span>
+</span><span id="__span-14-2"><span class="n">DETECTBOX</span><span class="w"> </span><span class="n">mean_vel</span><span class="p">;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">...)</span><span class="w"> </span><span class="n">mean_vel</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-14-3">
+</span><span id="__span-14-4"><span class="n">KAL_MEAN</span><span class="w"> </span><span class="n">mean</span><span class="p">;</span>
+</span><span id="__span-14-5"><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">8</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-6"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean_pos</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+</span><span id="__span-14-7"><span class="w">  </span><span class="k">else</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean_vel</span><span class="p">(</span><span class="n">i</span><span class="mi">-4</span><span class="p">);</span>
+</span><span id="__span-14-8"><span class="p">}</span>
+</span><span id="__span-14-9">
+</span><span id="__span-14-10"><span class="n">KAL_MEAN</span><span class="w"> </span><span class="n">std</span><span class="p">;</span>
+</span><span id="__span-14-11"><span class="n">std</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">measurement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+</span><span id="__span-14-12"><span class="n">std</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">measurement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+</span><span id="__span-14-13"><span class="n">std</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e-2</span><span class="p">;</span>
+</span><span id="__span-14-14"><span class="n">std</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">measurement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+</span><span id="__span-14-15"><span class="n">std</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_std_weight_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">measurement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+</span><span id="__span-14-16"><span class="n">std</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_std_weight_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">measurement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+</span><span id="__span-14-17"><span class="n">std</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1e-5</span><span class="p">;</span>
+</span><span id="__span-14-18"><span class="n">std</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">_std_weight_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">measurement</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+</span><span id="__span-14-19">
+</span><span id="__span-14-20"><span class="n">KAL_MEAN</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">array</span><span class="p">().</span><span class="n">square</span><span class="p">();</span>
+</span><span id="__span-14-21"><span class="n">KAL_COVA</span><span class="w"> </span><span class="n">var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">.</span><span class="n">asDiagonal</span><span class="p">();</span>
+</span><span id="__span-14-22"><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span><span class="w"> </span><span class="n">var</span><span class="p">);</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>mean</strong>（初始状态）：把检测量 <code>measurement</code> 的前 4 个分量放到 <code>mean</code> 的前 4 位（位置相关），速度分量初始化为 0（或者可以用两帧差分估计）。</li>
+<li>
+<p><strong>协方差 <code>P</code> 的初始化</strong>：</p>
+</li>
+<li>
+<p>对位置：<code>std = 2 * std_weight_position * h</code> → 标准差与目标高度 <code>h</code> 成比例；示例：若 <code>std_weight_position=1/20</code> 且 <code>h=50</code>，则 <code>std = 2 * (1/20) * 50 = 5</code> → 方差 = 25。</p>
+</li>
+<li>对速度：<code>std = 10 * std_weight_velocity * h</code> → 速度的不确定性通常比位置信息大/小要看常数（此实现用了 <code>10 * 1/160 * h</code> → ≈ <code>h/16</code>）。</li>
+<li>第 3 个分量（aspect ratio）和第 6 个速度分量被硬编码为小常数（<code>1e-2</code>, <code>1e-5</code>），因为 aspect 比较稳定或尺度变化较小。</li>
+<li>最终返回 <code>(mean, var)</code>：<code>mean</code> 是 8 维向量，<code>var</code> 是 <code>8×8</code> 对角方差矩阵（只初始化对角）。</li>
+</ul>
+<hr />
+<h3 id="64-predictkal_mean-mean-kal_cova-covariance">6.4 <code>predict(KAL_MEAN &amp;mean, KAL_COVA &amp;covariance)</code> —— 预测步骤<a class="headerlink" href="#64-predictkal_mean-mean-kal_cova-covariance" title="Permanent link">&para;</a></h3>
+<p>代码：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-15-1"><span class="n">DETECTBOX</span><span class="w"> </span><span class="n">std_pos</span><span class="p">;</span>
+</span><span id="__span-15-2"><span class="n">std_pos</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="mf">1e-2</span><span class="p">,</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span id="__span-15-3"><span class="n">DETECTBOX</span><span class="w"> </span><span class="n">std_vel</span><span class="p">;</span>
+</span><span id="__span-15-4"><span class="n">std_vel</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">_std_weight_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="n">_std_weight_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="mf">1e-5</span><span class="p">,</span><span class="w"> </span><span class="n">_std_weight_velocity</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span id="__span-15-5"><span class="n">KAL_MEAN</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+</span><span id="__span-15-6"><span class="n">tmp</span><span class="p">.</span><span class="n">block</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std_pos</span><span class="p">;</span>
+</span><span id="__span-15-7"><span class="n">tmp</span><span class="p">.</span><span class="n">block</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std_vel</span><span class="p">;</span>
+</span><span id="__span-15-8"><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">.</span><span class="n">array</span><span class="p">().</span><span class="n">square</span><span class="p">();</span>
+</span><span id="__span-15-9"><span class="n">KAL_COVA</span><span class="w"> </span><span class="n">motion_cov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">.</span><span class="n">asDiagonal</span><span class="p">();</span>
+</span><span id="__span-15-10">
+</span><span id="__span-15-11"><span class="n">KAL_MEAN</span><span class="w"> </span><span class="n">mean1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_motion_mat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">.</span><span class="n">transpose</span><span class="p">();</span>
+</span><span id="__span-15-12"><span class="n">KAL_COVA</span><span class="w"> </span><span class="n">covariance1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">_motion_mat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">covariance</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">_motion_mat</span><span class="p">.</span><span class="n">transpose</span><span class="p">());</span>
+</span><span id="__span-15-13"><span class="n">covariance1</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">motion_cov</span><span class="p">;</span>
+</span><span id="__span-15-14">
+</span><span id="__span-15-15"><span class="n">mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean1</span><span class="p">;</span>
+</span><span id="__span-15-16"><span class="n">covariance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">covariance1</span><span class="p">;</span>
+</span></code></pre></div></td></tr></table></div>
+<p>数学对应（标准 KF）：</p>
+<ul>
+<li>状态预测： $ \hat{x}^- = A \hat{x} $。</li>
+<li>协方差预测： <span class="arithmatex">\(P^- = A P A^T + Q\)</span>，其中 <code>Q</code> 是<strong>过程噪声协方差</strong>（这里叫 <code>motion_cov</code>）。
+  实现细节说明：</li>
+<li>
+<p><code>motion_cov</code>（Q）是根据当前 <code>mean(3)</code>（也就是 <code>h</code> —— 目标高度）动态计算的：<code>std_pos = _std_weight_position * h</code>（与 <code>init</code> 不同，预测时没有乘 <code>2</code>，这是实现上的选择）；速度项同理。</p>
+</li>
+<li>
+<p>这样做的目的是：目标越大（<code>h</code> 大），预测时的绝对误差也可能越大，所以将 <code>Q</code> 随 <code>h</code> 放大。</p>
+</li>
+<li><code>mean1 = _motion_mat * mean.transpose()</code>：源码里用到了多次 <code>transpose()</code> —— 这是因为代码中状态可能以<strong>行向量</strong>存储（<code>1×8</code>），而矩阵 <code>A</code> 以 <code>8×8</code> 形式存储，乘法需要列向量。</li>
+<li>最后把 <code>mean</code> 与 <code>covariance</code> 替换为预测值。</li>
+</ul>
+<p>注意/建议：</p>
+<ul>
+<li><code>motion_cov</code> 应保证数值稳定（不要太小导致 <code>P</code> 丧失正定）。</li>
+<li>如果帧间时间 <code>dt</code> 不是 1，应把 <code>A</code> 和 <code>Q</code> 按 <code>dt</code> 调整（例如位置项乘以 <code>dt</code>，过程噪声按 <code>dt</code> 的多项式扩展）。</li>
+</ul>
+<h3 id="65-projectconst-kal_mean-mean-const-kal_cova-covariance">6.5 <code>project(const KAL_MEAN &amp;mean, const KAL_COVA &amp;covariance)</code> —— 将状态投影到观测空间<a class="headerlink" href="#65-projectconst-kal_mean-mean-const-kal_cova-covariance" title="Permanent link">&para;</a></h3>
+<p>代码：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-16-1"><span class="n">DETECTBOX</span><span class="w"> </span><span class="n">std</span><span class="p">;</span>
+</span><span id="__span-16-2"><span class="n">std</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="mf">1e-1</span><span class="p">,</span><span class="w"> </span><span class="n">_std_weight_position</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span id="__span-16-3"><span class="n">KAL_HMEAN</span><span class="w"> </span><span class="n">mean1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_update_mat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mean</span><span class="p">.</span><span class="n">transpose</span><span class="p">();</span>
+</span><span id="__span-16-4"><span class="n">KAL_HCOVA</span><span class="w"> </span><span class="n">covariance1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_update_mat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">covariance</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">_update_mat</span><span class="p">.</span><span class="n">transpose</span><span class="p">());</span>
+</span><span id="__span-16-5"><span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="w"> </span><span class="n">diag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="p">.</span><span class="n">asDiagonal</span><span class="p">();</span>
+</span><span id="__span-16-6"><span class="n">diag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">diag</span><span class="p">.</span><span class="n">array</span><span class="p">().</span><span class="n">square</span><span class="p">().</span><span class="n">matrix</span><span class="p">();</span>
+</span><span id="__span-16-7"><span class="n">covariance1</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">diag</span><span class="p">;</span>
+</span><span id="__span-16-8"><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">mean1</span><span class="p">,</span><span class="w"> </span><span class="n">covariance1</span><span class="p">);</span>
+</span></code></pre></div></td></tr></table></div>
+<p>数学对应：</p>
+<ul>
+<li><code>z_pred = H * x^-</code>（预测的观测）</li>
+<li><code>S = H P^- H^T + R</code>，R 是观测噪声协方差（代码中用 <code>diag</code>，由 <code>std</code> 得到）</li>
+<li>返回 <code>(z_pred, S)</code>
+  实现/注意点：</li>
+<li><code>std</code> 中第 3 个元素（aspect）在 <code>project</code> 中使用 <code>1e-1</code>（比 <code>init</code> 使用的 <code>1e-2</code> 稍大），这种不一致可能是作者刻意在观测噪声上更保守，也可能是笔误，建议统一或注释说明。</li>
+<li><code>covariance1</code> 在这里就是 <code>S</code>（投影协方差），用于后续计算卡尔曼增益与 gating。</li>
+</ul>
+<h3 id="66-update">6.6 <code>update(...)</code> —— 用观测修正预测<a class="headerlink" href="#66-update" title="Permanent link">&para;</a></h3>
+<p>代码（重要段）：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-17-1"><span class="n">KAL_HDATA</span><span class="w"> </span><span class="n">pa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">project</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span><span class="w"> </span><span class="n">covariance</span><span class="p">);</span>
+</span><span id="__span-17-2"><span class="n">KAL_HMEAN</span><span class="w"> </span><span class="n">projected_mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pa</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+</span><span id="__span-17-3"><span class="n">KAL_HCOVA</span><span class="w"> </span><span class="n">projected_cov</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pa</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+</span><span id="__span-17-4">
+</span><span id="__span-17-5"><span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">covariance</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">_update_mat</span><span class="p">.</span><span class="n">transpose</span><span class="p">())).</span><span class="n">transpose</span><span class="p">();</span>
+</span><span id="__span-17-6"><span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="w"> </span><span class="n">kalman_gain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">projected_cov</span><span class="p">.</span><span class="n">llt</span><span class="p">().</span><span class="n">solve</span><span class="p">(</span><span class="n">B</span><span class="p">)).</span><span class="n">transpose</span><span class="p">();</span><span class="w"> </span><span class="c1">// eg.8x4</span>
+</span><span id="__span-17-7"><span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="w"> </span><span class="n">innovation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">measurement</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">projected_mean</span><span class="p">;</span><span class="w"> </span><span class="c1">//eg.1x4</span>
+</span><span id="__span-17-8"><span class="k">auto</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">innovation</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">kalman_gain</span><span class="p">.</span><span class="n">transpose</span><span class="p">());</span>
+</span><span id="__span-17-9"><span class="n">KAL_MEAN</span><span class="w"> </span><span class="n">new_mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mean</span><span class="p">.</span><span class="n">array</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tmp</span><span class="p">.</span><span class="n">array</span><span class="p">()).</span><span class="n">matrix</span><span class="p">();</span>
+</span><span id="__span-17-10"><span class="n">KAL_COVA</span><span class="w"> </span><span class="n">new_covariance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">covariance</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">kalman_gain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">projected_cov</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">kalman_gain</span><span class="p">.</span><span class="n">transpose</span><span class="p">());</span>
+</span><span id="__span-17-11"><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="n">new_mean</span><span class="p">,</span><span class="w"> </span><span class="n">new_covariance</span><span class="p">);</span>
+</span></code></pre></div></td></tr></table></div>
+<p>数学对应（经典 KF）：</p>
+<ul>
+<li>预测观测： <code>z_pred = H x^-</code>， <code>S = H P^- H^T + R</code>（已由 <code>project</code> 得到）</li>
+<li>
+<p>卡尔曼增益： <span class="arithmatex">\(K = P^- H^T S^{-1}\)</span>。源码通过线性代数变换与 LLT 求解避免直接求逆：</p>
+</li>
+<li>
+<p>取 <code>B = (P * H^T)^T</code>，然后 <code>projected_cov.llt().solve(B)</code> 计算 <code>S^{-1} * B</code>，再转置得到 <code>K</code>（数学上等于 <code>P H^T S^{-1}</code>，前面解释里可验证）。</p>
+</li>
+<li>创新（innovation）： <code>y = z - z_pred</code> （观测减预测观测）</li>
+<li>状态更新： <code>x = x^- + K y</code>（源码实现为行向量形式的 <code>mean + (innovation * K^T)</code>）</li>
+<li>协方差更新（你用的是标准形式）：</li>
+</ul>
+<p>$$
+  P = P^- - K S K^T
+  $$</p>
+<ul>
+<li>
+<p>建议：使用 <strong>Joseph 形式</strong> 更新可以更数值稳定并更能保证 <code>P</code> 正定：</p>
+<p>$$
+P = (I - K H) P^- (I - K H)^T + K R K^T.
+$$
+* 你用 <code>projected_cov.llt().solve</code> 来解 <code>S X = B</code>，比直接 <code>S.inverse()</code> 更高效且更稳定（这是好的实践）。</p>
+</li>
+</ul>
+<p>潜在问题：</p>
+<ul>
+<li>如果 <code>projected_cov</code> 不是严格正定，<code>LLT</code> 会失败。建议在失败时退用 <code>LDLT</code>，或者在对角线上加小量 <code>eps</code>（jitter）后再做分解。</li>
+<li><code>innovation</code> 与 <code>mean</code> 的形状（行向量 vs 列向量）要统一；源码中通过 <code>transpose()</code> 多次切换方向，易出错；建议统一成列向量形式，简化表达。</li>
+</ul>
+<hr />
+<h3 id="67-gating_distance-gating">6.7 <code>gating_distance(...)</code> —— 计算（批量）马氏距离，用于关联 gating<a class="headerlink" href="#67-gating_distance-gating" title="Permanent link">&para;</a></h3>
+<p>代码：</p>
+<div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-18-1"><span class="n">KAL_HDATA</span><span class="w"> </span><span class="n">pa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">project</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span><span class="w"> </span><span class="n">covariance</span><span class="p">);</span>
+</span><span id="__span-18-2"><span class="p">...</span><span class="w"> </span><span class="c1">// pa.first = mean1 (1x4), pa.second = covariance1 (4x4)</span>
+</span><span id="__span-18-3">
+</span><span id="__span-18-4"><span class="n">DETECTBOXSS</span><span class="w"> </span><span class="n">d</span><span class="p">(</span><span class="n">measurements</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+</span><span id="__span-18-5"><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">box</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">measurements</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-18-6"><span class="w">  </span><span class="n">d</span><span class="p">.</span><span class="n">row</span><span class="p">(</span><span class="n">pos</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">box</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">mean1</span><span class="p">;</span>
+</span><span id="__span-18-7"><span class="p">}</span>
+</span><span id="__span-18-8"><span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">RowMajor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">covariance1</span><span class="p">.</span><span class="n">llt</span><span class="p">().</span><span class="n">matrixL</span><span class="p">();</span>
+</span><span id="__span-18-9"><span class="n">Eigen</span><span class="o">::</span><span class="n">Matrix</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="o">&gt;</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">.</span><span class="n">triangularView</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Lower</span><span class="o">&gt;</span><span class="p">().</span><span class="n">solve</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">OnTheRight</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">).</span><span class="n">transpose</span><span class="p">();</span>
+</span><span id="__span-18-10"><span class="k">auto</span><span class="w"> </span><span class="n">zz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">z</span><span class="p">.</span><span class="n">array</span><span class="p">())</span><span class="o">*</span><span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="n">array</span><span class="p">())).</span><span class="n">matrix</span><span class="p">();</span>
+</span><span id="__span-18-11"><span class="k">auto</span><span class="w"> </span><span class="n">square_maha</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zz</span><span class="p">.</span><span class="n">colwise</span><span class="p">().</span><span class="n">sum</span><span class="p">();</span>
+</span><span id="__span-18-12"><span class="k">return</span><span class="w"> </span><span class="n">square_maha</span><span class="p">;</span>
+</span></code></pre></div></td></tr></table></div>
+<p>数学意义（逐步）：</p>
+<ul>
+<li><code>d_i = z_i - z_pred</code>，对 <code>N</code> 个检测得到 <code>N×4</code> 的差值矩阵 <code>d</code>。</li>
+<li>对于每个 <code>d_i</code>，马氏距离平方定义为 <span class="arithmatex">\(d_i^T S^{-1} d_i\)</span>（<code>S</code> 为投影协方差）。</li>
+<li>计算方法：对 <code>S</code> 做 Cholesky 分解 <code>S = L L^T</code>，解 <code>L y = d_i^T</code> 得 <code>y = L^{-1} d_i^T</code>，则 <code>d_i^T S^{-1} d_i = ||y||^2</code>。源码就是用这个稳定做法（避免直接求 <code>S^{-1}</code>）。</li>
+<li>返回结果 <code>square_maha</code> 为每个 <code>measurement</code> 的 <strong>平方马氏距离</strong>（可以与 <code>chi2inv95[4]</code> 比较做门控）。</li>
+</ul>
+<p>实现细节/注意点：</p>
+<ul>
+<li><code>only_position</code> 分支未实现（源码 <code>printf("not implement!"); exit(0);</code>）。<code>only_position</code> 若为真，通常意图是只基于位置（x,y）计算门控距离（自由度 = 2），用于某些只在 xy 上 gating 的策略。可以实现一个子 <code>H_pos</code> 和相应的 <code>S_pos</code>。</li>
+<li>同样要对 <code>LLT</code> 失败加保护（数值稳定性）。</li>
+</ul>
+<hr />
+<h3 id="68">6.8 参数含义与常数解释（为什么这么设）<a class="headerlink" href="#68" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><code>_std_weight_position = 1/20</code> 与 <code>_std_weight_velocity = 1/160</code>：把目标高度 <code>h</code> 映射为噪声尺度。</p>
+</li>
+<li>
+<p>例子： <code>h = 50px</code>：</p>
+<ul>
+<li><code>init</code> 时 <code>pos_std = 2 * (1/20) * 50 = 5</code> → <code>pos_var = 25</code>（初始位置不确定度 ~5 px）</li>
+<li><code>init</code> 时 <code>vel_std = 10 * (1/160) * 50 = 3.125</code> → <code>vel_var ≈ 9.77</code></li>
+<li>这些值是经验常数，能按具体场景（帧率、相机分辨率、目标运动速度）来调。</li>
+<li>小常数 <code>1e-2</code>, <code>1e-5</code>：表示对某些维度（如 aspect 或其速度）的强先验（非常确定或非常稳定）——但要小心，不要把某些分量设得太小，导致数值问题。</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="69">6.9 常见改进建议（代码/数值稳定/性能）<a class="headerlink" href="#69" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>统一向量方向</strong>：把状态 <code>x</code> 用固定的列向量（<code>Eigen::Matrix&lt;float,8,1&gt;</code>）表示，减少 <code>transpose()</code> 调用 —— 更直观也更不易出错。</li>
+<li><strong>协方差更新采用 Joseph 形式</strong>，保证数值稳定性：</li>
+</ol>
+<p><div class="language-cpp highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">C++</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-19-1"><span class="n">Matrix8f</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Matrix8f</span><span class="o">::</span><span class="n">Identity</span><span class="p">();</span>
+</span><span id="__span-19-2"><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">I</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">K</span><span class="o">*</span><span class="n">H</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">I</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">K</span><span class="o">*</span><span class="n">H</span><span class="p">).</span><span class="n">transpose</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">K</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">R</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">K</span><span class="p">.</span><span class="n">transpose</span><span class="p">();</span>
+</span></code></pre></div></td></tr></table></div>
+3. <strong>LLT 失败保护</strong>：在 <code>project</code>/<code>update</code>/<code>gating</code> 中，如果 <code>LLT</code> 失败，先尝试 <code>LDLT</code>，或给 <code>cov += eps * I</code> 后重试（<code>eps</code> 如 <code>1e-6</code>~<code>1e-3</code> 视量级）。
+4. <strong>避免频繁动态内存</strong>：用 <code>Eigen::Matrix&lt;float,8,8&gt;</code> 等固定尺寸类型提高性能（避免 <code>MatrixXf</code> 的动态分配）。
+5. <strong>批量预测</strong>：如果有大量轨迹，按批（batch）做 <code>A * X</code> 可以更快（线性代数优化）。
+6. <strong>自适应噪声</strong>：可以把 <code>R</code> 或 <code>Q</code> 与检测器置信度 <code>score</code> 关联（高置信度 → 小 <code>R</code>，信任观测更多）。
+7. <strong>帧间时间 <code>dt</code></strong>：若视频帧率不稳定，<code>A</code> 中 <code>dt</code> 不应固定为 <code>1</code>，应传入真实 <code>dt</code> 并把 <code>Q</code> 按 <code>dt</code> 调整（例如 <code>Q</code> 会含 <code>dt^2</code>、<code>dt^3</code> 项）。
+8. <strong>实现 <code>only_position</code> gating</strong>：当只以 <code>x,y</code> 做 gating 时，投影 <code>H_pos</code> = pick x,y dims，<code>S_pos</code> 为对应子矩阵，degree-of-freedom = 2。</p>
+<hr />
+<h3 id="610">6.10. 小示例：数值化走一遍（便于理解）<a class="headerlink" href="#610" title="Permanent link">&para;</a></h3>
+<p>假设进入 <code>initiate</code> 的检测 <code>measurement = [100, 200, 1.0, 50]</code>（<code>h=50</code>）：</p>
+<ul>
+<li>初始化 mean = <code>[100,200,1.0,50, 0,0,0,0]</code></li>
+<li>
+<p>初始化 std：</p>
+</li>
+<li>
+<p><code>std(0)=2*(1/20)*50 = 5</code> → var = 25</p>
+</li>
+<li><code>std(4)=10*(1/160)*50 = 3.125</code> → var ≈ 9.77</li>
+<li>其他按源码（<code>1e-2</code>, <code>1e-5</code>）</li>
+<li>得到 <code>P = diag([25,25,1e-4,25, 9.77,9.77,1e-10,9.77])</code>（约）
+  下一帧 predict（假设 mean 的速度现在仍 0）：</li>
+<li><code>mean^- = A * mean</code> → 位置没变（速度 = 0），<code>P^- = A P A^T + Q</code>，<code>Q</code> 根据 <code>h</code> 再生成并加入到对角上，导致 <code>P^-</code> 的位置与速度方差略增加。
+  如果检测器返回 <code>z = [103, 199, 0.98, 49]</code>：</li>
+<li><code>project</code> 得到 <code>z_pred</code> 与 <code>S</code></li>
+<li><code>kalman_gain K = P^- H^T S^{-1}</code></li>
+<li><code>innovation y = z - z_pred ≈ [3, -1, -0.02, -1]</code></li>
+<li><code>x = x^- + K y</code> → 得到新的位置/速度估计（融合了预测与检测）</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.top", "navigation.indexes", "navigation.expand", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit", "navigation.path"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../mkdocs/javascripts/katex.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/katex.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.7/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
