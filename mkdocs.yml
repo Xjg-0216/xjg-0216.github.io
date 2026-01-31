@@ -28,8 +28,8 @@ nav:
       - TOOL/network.md
     - vscode远程免密连接:
       - TOOL/vscode-remote-auto-conn.md
-  - 算法:
-    - Algorithm/01-kalman.md  
+  # - 算法:
+  #   - Algorithm/01-kalman.md  
   - 图像处理:
     - ISP:
       - IMAGE_PROCESS/isp/isp_pipeline.md
@@ -44,8 +44,9 @@ nav:
     - IMAGE_PROCESS/03-reprojection.md
     - IMAGE_PROCESS/04-ord.md
   - LLM:
-    - LLM/00-LLM简介.md
-    - LLM/01-模型文件格式以及框架.md
+    # - LLM/00-LLM简介.md
+    # - LLM/01-模型文件格式以及框架.md
+    - LLM/00-LLM学习路线.md
     - LLM/02-ollama使用.md
     - LLM/03-DDPM.md
     - LLM/04-bigram_language_model.md
@@ -84,8 +85,8 @@ nav:
       - C++/16-function_template.md
       - C++/question.md
       - C++/hdf5.md
-  - 计算机网络:
-    - computer_network/01-client_server.md
+  # - 计算机网络:
+  #   - computer_network/01-client_server.md
   - UAV:
     - UAV/01-elevation.md
     - UAV/02-Flight_attitude.md
@@ -93,10 +94,10 @@ nav:
     - UAV/04-intro.md
   - 模型部署:
     - deploy/01-rknn.md
-    - deploy/onnx.md
-    - deploy/video.md
-    - deploy/npu.md
-    - deploy/cpu.md
+    # - deploy/onnx.md
+    # - deploy/video.md
+    # - deploy/npu.md
+    # - deploy/cpu.md
   - 其他:
     - Learn/index.md
   - deepLearning:
