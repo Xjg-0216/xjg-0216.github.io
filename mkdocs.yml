@@ -53,6 +53,12 @@ nav:
     - LLM/05-miniGPT.md
     - LLM/06-nanoGPT.md
     - LLM/07-mfu.md
+    - RAG:
+      - LLM/RAG/[1]_rag_setup_overview_explained.md
+      - LLM/RAG/[2]_rag_with_multi_query_explained.md
+      - LLM/RAG/[3]_rag_routing_and_query_construction_explained.md
+      - LLM/RAG/[4]_rag_indexing_and_advanced_retrieval_explained.md
+      - LLM/RAG/[5]_rag_retrieval_and_reranking_explained.md
   - C++:
     - tool:
       - C++/vscode/00-make.md 
